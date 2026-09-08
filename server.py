@@ -3,6 +3,7 @@ Agro-Sphere — Production REST API Backend Server
 Powered by FastAPI, SQLite & Pydantic
 """
 
+import os
 import sqlite3
 import json
 from typing import List, Optional

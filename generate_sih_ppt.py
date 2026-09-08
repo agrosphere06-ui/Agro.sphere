@@ -39,7 +39,7 @@ for shape in slide1.shapes:
             ("Team Name: ", "Agro-Sphere Innovators"),
             ("Project / Idea: ", "Agro-Sphere (Multilingual Farmer Intelligence Platform)"),
             ("GitHub Repo: ", "https://github.com/agrosphere06-ui/Agro.sphere.git"),
-            ("Live Web App: ", "https://agrosphere-app.vercel.app")
+            ("Live Web App: ", "https://agrosphere06-ui.github.io/Agro.sphere/")
         ]
         
         for label, val in items:
@@ -333,7 +333,7 @@ for shape in slide6.shapes:
         
         lines = [
             ("Research Grounding, Live Deployment & References", True, 13, RGBColor(23, 58, 37)),
-            ("• Live Web Prototype: https://agrosphere-app.vercel.app", True, 10.5, RGBColor(33, 115, 70)),
+            ("• Live Web Platform: https://agrosphere06-ui.github.io/Agro.sphere/", True, 10.5, RGBColor(33, 115, 70)),
             ("• Official GitHub Codebase: https://github.com/agrosphere06-ui/Agro.sphere.git", True, 10.5, RGBColor(20, 80, 160)),
             ("• Government Data Reference: Agmarknet (Directorate of Marketing & Inspection, Ministry of Agriculture & Farmers Welfare).", False, 10.5, RGBColor(40, 40, 40)),
             ("• Post-Harvest Loss Research: NITI Aayog Strategy for Doubling Farmers Income & Central Institute of Post-Harvest Engineering (CIPHET).", False, 10.5, RGBColor(40, 40, 40)),
