@@ -1,0 +1,16 @@
+{
+  "name": "agro-sphere",
+  "version": "1.0.0",
+  "description": "Agro-Sphere Farmer Market Intelligence",
+  "scripts": {
+    "dev": "python server.py",
+    "start": "python server.py"
+  },
+  "keywords": [
+    "agriculture",
+    "market-intelligence",
+    "ai"
+  ],
+  "author": "Agro-Sphere",
+  "license": "ISC"
+}

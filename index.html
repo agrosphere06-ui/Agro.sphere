@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agro-Sphere — Farmer Market Intelligence</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="style.css?v=8.1.0">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+
+            <div class="brand">
+                <div class="logo">
+                    <img src="assets/logo.png" alt="Agro-Sphere Logo" class="brand-logo-img">
+                </div>
+                <div>
+                    <b>Agro-Sphere</b>
+                    <small data-i18n="marketIntelligence">Market Intelligence</small>
+                </div>
+            </div>
+
+            <nav class="nav">
+                <button class="active" data-go="dashboard">
+                    <span data-i18n="dashboard">Dashboard</span>
+                </button>
+
+                <button data-go="prices">
+                    <span data-i18n="priceIntelligence">Price Intelligence</span>
+                </button>
+
+                <button data-go="products">
+                    <span data-i18n="productAvailability">Product Availability</span>
+                </button>
+
+                <button data-go="collective">
+                    <span data-i18n="farmerCollective">Farmer Collective</span>
+                </button>
+
+                <button data-go="schedule">
+                    <span data-i18n="smartSchedule">Logistics & Schedule</span>
+                </button>
+
+                <button onclick="openOrdersTrackingModal()" style="color:var(--lime); font-weight:600;">
+                    <span>My Orders & Tracking</span>
+                </button>
+
+                <button data-go="feedback">
+                    <span data-i18n="reviewsFeedback">Reviews & Feedback</span>
+                </button>
+
+                <button data-go="support">
+                    <span data-i18n="customerCareNav">Customer Care</span>
+                </button>
+
+                <button onclick="window.location.href='login.html'" style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px; color: var(--lime);">
+                    <span>Sign In / Profile</span>
+                </button>
+            </nav>
+
+            <div class="bottom">
+                <div class="system-status-badge" style="padding: 10px 14px; background: rgba(22, 163, 74, 0.12); border: 1px solid rgba(34, 197, 94, 0.25); border-radius: 10px; font-size: 11.5px; color: #86efac; display: flex; align-items: center; gap: 8px;">
+                    <span style="width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; display: inline-block;"></span>
+                    <span><b>APMC Central</b> · Connected</span>
+                </div>
+                <a href="https://github.com/agrosphere06-ui/Agro.sphere.git" target="_blank" rel="noopener noreferrer" style="margin-top:8px; display:flex; align-items:center; justify-content:center; gap:6px; font-size:11.5px; color:#d1e7d5; text-decoration:none; padding:8px 12px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:8px; transition:all 0.2s;" title="View Source Code on GitHub">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    <span>GitHub Codebase</span>
+                </a>
+            </div>
+
+        </aside>
+
+
+        <!-- MAIN -->
+        <main class="main">
+
+            <header class="top">
+
+                <div class="header-left-tools">
+                    <button class="mobile" id="menu">☰</button>
+
+                    <div class="search">
+                        ⌕
+                        <input id="search" data-placeholder="searchPlaceholder" placeholder="Search crops, buyers, markets...">
+                    </div>
+                </div>
+
+                <div class="header-right-tools" id="headerRightTools" style="margin-left: auto; display: flex; align-items: center; gap: 14px;">
+
+                    <!-- COMPACT VOICE ASSISTANT BUTTON (SMALL) -->
+                    <a href="ai_krishi_sahayak.html" target="_blank" class="header-voice-btn small" id="voiceAssistantBtn" title="Ai Krishi Sahayak · Voice &amp; Chat Assistant">
+                    <img src="assets/ai_farmer_assistant.png" class="header-voice-avatar" alt="Ai Krishi Sahayak" onerror="this.style.display='none'">
+                    <span class="header-voice-mic">🎙️</span>
+                    <span class="header-voice-text">Ai Sahayak</span>
+                    <span class="header-voice-pulse"></span>
+                </a>
+
+                <!-- LANGUAGE -->
+                <div class="language-box">
+                    <span>🌐</span>
+                    <select id="languageSelect">
+                        <option value="en">English</option>
+                        <option value="hi">हिंदी</option>
+                        <option value="mr">मराठी</option>
+                        <option value="ta">தமிழ்</option>
+                        <option value="kn">ಕನ್ನಡ</option>
+                        <option value="bn">বাংলা</option>
+                        <option value="pa">ਪੰਜਾਬੀ</option>
+                        <option value="gu">ગુજરાતી</option>
+                        <option value="pahadi">पहाड़ी</option>
+                        <option value="ml">മലയാളം</option>
+                        <option value="ks">کٲشُر</option>
+                        <option value="as">অসমীয়া</option>
+                        <option value="te">తెలుగు</option>
+                    </select>
+                </div>
+
+                <!-- NOTIFICATION BUTTON & DROPDOWN (JUST NEXT AND RIGHT TO LANGUAGE SELECTOR) -->
+                <div class="notification-wrapper" id="notificationWrapper">
+                    <button type="button" class="notification-btn" id="notificationBtn" title="Notifications & Smart Alerts" onclick="toggleNotificationDropdown(event)" aria-label="Notifications" aria-haspopup="true" aria-expanded="false">
+                        <span class="notification-icon">🔔</span>
+                        <span class="notification-badge" id="notificationBadge">3</span>
+                        <span class="notification-pulse" id="notificationPulse"></span>
+                    </button>
+
+                    <!-- NOTIFICATION FLYOUT MENU -->
+                    <div class="notification-dropdown-menu" id="notificationDropdownMenu" style="display: none;" role="region" aria-label="Notifications Panel">
+                        <div class="notification-header">
+                            <div class="notification-title-wrap">
+                                <span class="notification-header-icon">🔔</span>
+                                <div>
+                                    <div class="notification-title-text" data-i18n="notificationsTitle">Notifications</div>
+                                    <div class="notification-count-label" id="notificationSubCount">3 unread alerts</div>
+                                </div>
+                            </div>
+                            <div class="notification-header-tools">
+                                <button type="button" class="notif-mark-read-btn" id="notifMarkReadBtn" onclick="markAllNotificationsRead(event)" title="Mark all as read">
+                                    <span class="mark-icon">✓✓</span>
+                                    <span data-i18n="markAllRead">Mark all read</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- FILTER TABS -->
+                        <div class="notification-tabs">
+                            <button type="button" class="notif-tab-btn active" data-tab="all" onclick="filterNotifications('all', this)">
+                                <span data-i18n="notifAll">All</span>
+                                <span class="notif-tab-count" id="tabCountAll">4</span>
+                            </button>
+                            <button type="button" class="notif-tab-btn" data-tab="price" onclick="filterNotifications('price', this)">
+                                <span data-i18n="notifPrices">Prices</span>
+                                <span class="notif-tab-count" id="tabCountPrice">2</span>
+                            </button>
+                            <button type="button" class="notif-tab-btn" data-tab="logistics" onclick="filterNotifications('logistics', this)">
+                                <span data-i18n="notifLogistics">Logistics</span>
+                                <span class="notif-tab-count" id="tabCountLogistics">1</span>
+                            </button>
+                            <button type="button" class="notif-tab-btn" data-tab="collective" onclick="filterNotifications('collective', this)">
+                                <span data-i18n="notifCollective">Collective</span>
+                                <span class="notif-tab-count" id="tabCountCollective">1</span>
+                            </button>
+                        </div>
+
+                        <!-- NOTIFICATIONS LIST -->
+                        <div class="notification-list" id="notificationList">
+                            <!-- NOTIF 1: Lasalgaon Price Surge -->
+                            <div class="notification-item unread" data-category="price" data-id="notif-1" onclick="handleNotificationItemClick(this, 'prices', 'Onion modal price surged to ₹3,420/q in Lasalgaon!')">
+                                <div class="notif-icon-box notif-icon-surge">
+                                    <span>📈</span>
+                                </div>
+                                <div class="notif-content">
+                                    <div class="notif-item-top">
+                                        <b class="notif-heading">Lasalgaon Onion Rate Surge (+8.4%)</b>
+                                        <span class="notif-time">5m ago</span>
+                                    </div>
+                                    <p class="notif-desc">Modal mandi price reached ₹3,420/q today. High buyer demand recorded across Maharashtra terminals.</p>
+                                    <div class="notif-tags-row">
+                                        <span class="notif-pill notif-pill-green">Mandi Surge</span>
+                                        <span class="notif-action-hint">Tap to view Price Intelligence →</span>
+                                    </div>
+                                </div>
+                                <div class="notif-dot-wrap">
+                                    <span class="notif-unread-dot" title="Unread"></span>
+                                </div>
+                            </div>
+
+                            <!-- NOTIF 2: Reefer Truck Logistics -->
+                            <div class="notification-item unread" data-category="logistics" data-id="notif-2" onclick="handleNotificationItemClick(this, 'schedule', 'Truck MH-15-AB-4021 en route to Pimpalgaon collection center')">
+                                <div class="notif-icon-box notif-icon-truck">
+                                    <span>🚚</span>
+                                </div>
+                                <div class="notif-content">
+                                    <div class="notif-item-top">
+                                        <b class="notif-heading">Reefer Truck En Route (MH-15-AB-4021)</b>
+                                        <span class="notif-time">24m ago</span>
+                                    </div>
+                                    <p class="notif-desc">Driver Suresh Kumar is 18 km away from Pimpalgaon hub for scheduled Tomato harvest dispatch.</p>
+                                    <div class="notif-tags-row">
+                                        <span class="notif-pill notif-pill-blue">Smart Logistics</span>
+                                        <span class="notif-action-hint">View live route schedule →</span>
+                                    </div>
+                                </div>
+                                <div class="notif-dot-wrap">
+                                    <span class="notif-unread-dot" title="Unread"></span>
+                                </div>
+                            </div>
+
+                            <!-- NOTIF 3: Collective Pool -->
+                            <div class="notification-item unread" data-category="collective" data-id="notif-3" onclick="handleNotificationItemClick(this, 'collective', 'Nashik collective pool reached 85% volume')">
+                                <div class="notif-icon-box notif-icon-pool">
+                                    <span>🤝</span>
+                                </div>
+                                <div class="notif-content">
+                                    <div class="notif-item-top">
+                                        <b class="notif-heading">Onion Collective 85% Filled (15 MT left)</b>
+                                        <span class="notif-time">1h ago</span>
+                                    </div>
+                                    <p class="notif-desc">Reliance Fresh bulk purchase contract guaranteed at ₹3,550/q. Final lot slots closing soon.</p>
+                                    <div class="notif-tags-row">
+                                        <span class="notif-pill notif-pill-orange">FPO Pool</span>
+                                        <span class="notif-action-hint">Contribute crop lot →</span>
+                                    </div>
+                                </div>
+                                <div class="notif-dot-wrap">
+                                    <span class="notif-unread-dot" title="Unread"></span>
+                                </div>
+                            </div>
+
+                            <!-- NOTIF 4: Weather Warning -->
+                            <div class="notification-item" data-category="price" data-id="notif-4" onclick="handleNotificationItemClick(this, 'dashboard', 'IMD Weather Advisory: Store produce in covered warehouse')">
+                                <div class="notif-icon-box notif-icon-weather">
+                                    <span>🌧️</span>
+                                </div>
+                                <div class="notif-content">
+                                    <div class="notif-item-top">
+                                        <b class="notif-heading">IMD Weather Advisory · Nashik Zone</b>
+                                        <span class="notif-time">3h ago</span>
+                                    </div>
+                                    <p class="notif-desc">Moderate thundershowers expected within 48 hrs. Ensure open yards and dry stocks are secured under tarpaulin.</p>
+                                    <div class="notif-tags-row">
+                                        <span class="notif-pill notif-pill-gray">Weather Advisory</span>
+                                        <span class="notif-action-hint">Check farm advisory →</span>
+                                    </div>
+                                </div>
+                                <div class="notif-dot-wrap"></div>
+                            </div>
+                        </div>
+
+                        <!-- EMPTY STATE -->
+                        <div class="notification-empty-state" id="notificationEmptyState" style="display: none;">
+                            <div class="notif-empty-icon">🎉</div>
+                            <b data-i18n="allCaughtUp">All Caught Up!</b>
+                            <p data-i18n="noNewNotifs">No unread notifications at the moment.</p>
+                        </div>
+
+                        <!-- FOOTER -->
+                        <div class="notification-footer">
+                            <button type="button" class="notif-footer-action" onclick="viewAllAlertsSection(event)">
+                                <span data-i18n="viewAllAlerts">View All Market Alerts & Insights</span> →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- USER PROFILE WITH DROPDOWN -->
+                <div class="profile-wrapper" id="userProfileWrapper">
+                    <div class="profile-trigger" id="profileTrigger" onclick="toggleUserProfileDropdown(event)" role="button" aria-haspopup="true" aria-expanded="false" tabindex="0">
+                        <div class="avatar" id="headerAvatar">RP</div>
+                        <div class="profile-info">
+                            <b id="headerUserName">Ramesh Patel</b>
+                            <small id="headerUserHandle">@ramesh_farmer</small>
+                        </div>
+                        <span class="profile-chevron">▼</span>
+                    </div>
+
+                    <!-- PROFILE FLYOUT MENU -->
+                    <div class="profile-dropdown-menu" id="profileDropdownMenu">
+                        <div class="dropdown-user-header">
+                            <div class="dropdown-user-avatar" id="dropdownUserAvatar">RP</div>
+                            <div style="overflow: hidden;">
+                                <div class="dropdown-user-name" id="dropdownUserName">Ramesh Patel</div>
+                                <div class="dropdown-user-handle" id="dropdownUserHandle">@ramesh_farmer</div>
+                                <span class="dropdown-role-badge" id="dropdownUserRole">🌾 Verified Account Holder</span>
+                            </div>
+                        </div>
+
+                        <ul class="dropdown-menu-list">
+                            <li>
+                                <a class="dropdown-menu-item" href="javascript:void(0)" onclick="toast('📍 Verified Farm Location: Lasalgaon, Nashik')">
+                                    <span>📍</span> Farm Region: <b id="dropdownLocationText" style="margin-left:auto; font-size:11px; color:var(--muted);">Nashik</b>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-menu-item" href="javascript:void(0)" onclick="openOrdersTrackingModal()">
+                                    <span>📦</span> My Orders &amp; Deliveries
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-menu-item" href="javascript:void(0)" onclick="go('products')">
+                                    <span>🌾</span> My Harvest Lots
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-menu-item" href="javascript:void(0)" onclick="toast('🔒 KYC &amp; APMC Bank Account: Verified ✓')">
+                                    <span>🛡️</span> Verified KYC &amp; Bank
+                                </a>
+                            </li>
+                            <li class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-menu-item danger" href="javascript:void(0)" onclick="handleUserLogout()">
+                                    <span>🚪</span> Log Out
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- END HEADER RIGHT TOOLS -->
+                </div>
+
+            </header>
+
+
+            <div class="container">
+
+                <div id="toast" class="toast"></div>
+
+
+                <!-- ================= DASHBOARD ================= -->
+
+                <section id="dashboard" class="section active">
+
+
+
+                    <div class="hero">
+
+                        <div>
+
+                            <!-- REAL-TIME DATE, DAY & TIMING (ABOVE GOOD MORNING) -->
+                            <div class="hero-datetime-bar" id="heroRealtimeSchedule">
+                                <span class="hero-live-dot" title="Live Clock Active"></span>
+                                <span class="hero-day-name" id="heroScheduleDay">Friday</span>
+                                <span class="hero-datetime-sep">·</span>
+                                <span class="hero-schedule-date" id="heroScheduleDate">04 September 2026</span>
+                                <span class="hero-datetime-sep">·</span>
+                                <span class="hero-schedule-clock" id="heroScheduleClock">🕒 09:15:00 AM</span>
+                            </div>
+
+                            <h1>
+                                <span id="dashboardGreetingText" data-i18n="goodMorning">Good Morning</span>,
+                                <span id="dashboardHeroName">Ramesh Patel</span> 👋
+                            </h1>
+
+                            <div class="hero-user-badge">
+                                <span>🌾 Personal Mandi Handle:</span>
+                                <b id="dashboardHeroHandle">@ramesh_farmer</b>
+                                <span>·</span>
+                                <span id="dashboardHeroRole">Farmer / FPO</span>
+                            </div>
+
+
+                            <p data-i18n="heroDescription" id="dashboardHeroDescription">
+                                Make better selling decisions with transparent prices,
+                                verified buyers and smarter market connections.
+                            </p>
+
+                            <div class="actions" id="heroActionsContainer">
+
+                                <button class="btn primary" data-modal="listing" id="heroListProduceBtn">
+                                    ＋ <span data-i18n="listProduce">List Produce</span>
+                                </button>
+
+                                <button class="btn secondary" data-go="prices">
+                                    <span data-i18n="viewMarketPrices">View Market Prices</span> →
+                                </button>
+
+                                <button class="btn secondary" onclick="go('products')" id="heroBrowseProduceBtn" style="display:none;">
+                                    🌾 <span>Browse Produce Lots</span>
+                                </button>
+
+                                <button class="btn primary" onclick="window.location.href='login.html'" id="heroSignInBtn" style="display:none;">
+                                    🚀 <span>Sign In / Register</span>
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+
+                    <!-- ================= LIVE USER ACTIVITIES & DELIVERY TRACKING (DASHBOARD HUB) ================= -->
+                    <div class="card dashboard-activity-card" id="dashboardActivityCard" style="margin-top: 18px; border: 1px solid #d4e5d2; border-radius: 16px; padding: 22px; background: #ffffff; box-shadow: 0 4px 18px rgba(0,0,0,0.03);">
+
+                        <!-- Header Bar -->
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; border-bottom:1px solid #edf4ec; padding-bottom:14px; margin-bottom:16px;">
+                            <div>
+                                <div style="display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:800; color:#16a34a; letter-spacing:0.5px; text-transform:uppercase;">
+                                    <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#16a34a; animation:pulse 2s infinite;"></span>
+                                    LIVE USER ACTIVITIES &amp; ORDER TRACKING
+                                </div>
+                                <h2 style="margin:2px 0 4px 0; font-size:20px; color:#173a25;">
+                                    My Purchases &amp; Real-Time Delivery Tracking
+                                </h2>
+                                <p class="muted" style="margin:0; font-size:12px;">
+                                    Instant updates on your produce purchases, dispatch vehicles, and mandi arrivals across all devices.
+                                </p>
+                            </div>
+
+                            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                                <button type="button" class="btn secondary" onclick="clearMyPurchases()" style="font-size:11px; padding:7px 12px; color:#64748b; border-color:#e2e8f0; background:#f8fafc;" title="Clear order history for this session">
+                                    Clear History
+                                </button>
+                                <button type="button" class="btn secondary" onclick="renderDashboardActivities()" style="font-size:11px; padding:7px 12px;" title="Refresh activity status">
+                                    Refresh Status
+                                </button>
+                                <button type="button" class="btn primary" onclick="go('products')" style="font-size:11px; padding:7px 14px;" title="Buy Grade A or B Produce">
+                                    Buy Produce
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Live Feed Container -->
+                        <div id="dashboardActivitiesFeed" style="display:flex; flex-direction:column; gap:14px;">
+                            <!-- Populated dynamically via renderDashboardActivities() -->
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ================= PRICES ================= -->
+
+                <section id="prices" class="section">
+
+                    <div class="title">
+
+                        <div>
+                            <div class="eyebrow" data-i18n="marketIntelligenceUpper">
+                                MARKET INTELLIGENCE
+                            </div>
+
+                            <h1 data-i18n="priceDiscoveryTitle">
+                                Price Discovery
+                            </h1>
+
+                            <p class="muted" data-i18n="compareMandi">
+                                Compare nearby mandi prices before you sell.
+                            </p>
+                        </div>
+
+                        <button class="btn primary" data-modal="alert">
+                            ＋ <span data-i18n="createPriceAlert">Create Price Alert</span>
+                        </button>
+
+                    </div>
+
+
+                    <div class="summary" id="pricesSummaryContainer">
+
+                        <div class="card price-big">
+                            <span class="muted" id="pricesSecCropGrade">Onion · Grade A</span>
+                            <b id="pricesSecCropPrice">₹3,420 <small>/ quintal</small></b>
+                            <span class="up" id="pricesSecCropTrend">▲ 8.4% vs 7 days ago</span>
+                        </div>
+
+                        <div class="card mini">
+                            <span class="muted" data-i18n="highestMarket">Highest market</span>
+                            <b id="pricesSecCropHighestMandi">Lasalgaon</b>
+                            <small id="pricesSecCropHighestPrice">₹3,420/q</small>
+                        </div>
+
+                        <div class="card mini">
+                            <span class="muted" data-i18n="lowestMarket">Lowest market</span>
+                            <b id="pricesSecCropLowestMandi">Nagpur</b>
+                            <small id="pricesSecCropLowestPrice">₹3,050/q</small>
+                        </div>
+
+                        <div class="card mini">
+                            <span class="muted" data-i18n="expectedRangeLabel">Expected range</span>
+                            <b id="pricesSecCropExpectedRange">₹3,500–₹3,650</b>
+                            <small class="up" data-i18n="positiveTrend" id="pricesSecCropExpectedTrend">
+                                Positive trend
+                            </small>
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================= ALL PRODUCTS PRICE DISCOVERY GRAPH (IN PRICE INTELLIGENCE) ================= -->
+                    <div class="card price-discovery-card" id="pricesSectionGraphCard" style="margin-top: 18px; margin-bottom: 24px;">
+
+                        <div class="price-discovery-header">
+                            <div>
+                                <div class="eyebrow" data-i18n="priceDiscovery">
+                                    ALL-COMMODITIES PRICE DISCOVERY
+                                </div>
+                                <h2 id="pricesSecTitle">
+                                    🧅 Onion Price Trend
+                                </h2>
+                                <div class="price-mandi-tag" id="pricesSecMandiTag">
+                                    📍 Lasalgaon APMC · Benchmark Modal Mandi Rate
+                                </div>
+                            </div>
+
+                            <div class="price-discovery-actions">
+                                <div class="select-wrap">
+                                    <select id="pricesSecCropSelect" class="price-crop-select" title="Select any agricultural commodity">
+                                        <optgroup label="🥬 Vegetables (सब्जियां / भाज्या)">
+                                            <option value="Onion" selected>🧅 Onion (कांदा / प्याज)</option>
+                                            <option value="Tomato">🍅 Tomato (टोमॅटो / टमाटर)</option>
+                                            <option value="Potato">🥔 Potato (बटाटा / आलू)</option>
+                                            <option value="Lemon">🍋 Lemon (लिंबू / नींबू)</option>
+                                        </optgroup>
+                                        <optgroup label="🍎 Fruits (फल / फळे)">
+                                            <option value="Pomegranate">🍎 Pomegranate (डाळिंब / अनार)</option>
+                                            <option value="Banana">🍌 Banana (केळी / केला)</option>
+                                            <option value="Grapes">🍇 Grapes (द्राक्षे / अंगूर)</option>
+                                            <option value="Mango">🥭 Mango (आंबा / आम)</option>
+                                            <option value="Apple">🍎 Apple (सफरचंद / सेब)</option>
+                                            <option value="Orange">🍊 Orange (संत्री / संतरा)</option>
+                                            <option value="Guava">🍐 Guava (पेरू / अमरूद)</option>
+                                        </optgroup>
+                                        <optgroup label="🌾 Grains & Pulses (अनाज व कडधान्ये)">
+                                            <option value="Wheat">🌾 Wheat (गहू / गेहूं)</option>
+                                            <option value="Soybean">🫘 Soybean (सोयाबीन)</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+
+                                <div class="timeframe-toggle" role="group" aria-label="Select Timeframe">
+                                    <button type="button" class="tf-btn active" data-tf="30" id="pricesSecBtnTf30" title="1 Month (30-day continuous history)">
+                                        📅 1 Month (30D)
+                                    </button>
+                                    <button type="button" class="tf-btn" data-tf="7" id="pricesSecBtnTf7" title="Past 7 Days">
+                                        🗓 7 Days
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick One-Tap Crop Selection Chips Carousel -->
+                        <div class="crop-chips-container" id="pricesSecCropChips">
+                            <button type="button" class="crop-chip active" data-crop="Onion">🧅 Onion</button>
+                            <button type="button" class="crop-chip" data-crop="Tomato">🍅 Tomato</button>
+                            <button type="button" class="crop-chip" data-crop="Potato">🥔 Potato</button>
+                            <button type="button" class="crop-chip" data-crop="Lemon">🍋 Lemon</button>
+                            <button type="button" class="crop-chip" data-crop="Wheat">🌾 Wheat</button>
+                            <button type="button" class="crop-chip" data-crop="Soybean">🫘 Soybean</button>
+                            <button type="button" class="crop-chip" data-crop="Pomegranate">🍎 Pomegranate</button>
+                            <button type="button" class="crop-chip" data-crop="Banana">🍌 Banana</button>
+                            <button type="button" class="crop-chip" data-crop="Grapes">🍇 Grapes</button>
+                            <button type="button" class="crop-chip" data-crop="Mango">🥭 Mango</button>
+                            <button type="button" class="crop-chip" data-crop="Apple">🍎 Apple</button>
+                            <button type="button" class="crop-chip" data-crop="Orange">🍊 Orange</button>
+                            <button type="button" class="crop-chip" data-crop="Guava">🍐 Guava</button>
+                        </div>
+
+                        <!-- Interactive SVG Chart Canvas -->
+                        <div class="price-chart-wrap" id="pricesSecChartWrap">
+                            <svg id="pricesSecSvg" viewBox="0 0 860 320" class="price-discovery-svg"></svg>
+                            <div class="price-chart-tooltip" id="pricesSecTooltip"></div>
+                        </div>
+                    </div>
+
+
+                    <div class="card table-card">
+
+                        <div class="head">
+
+                            <div>
+                                <div class="eyebrow" data-i18n="nearbyMandis">
+                                    NEARBY MANDIS
+                                </div>
+
+                                <h2 data-i18n="marketComparison">
+                                    Market comparison
+                                </h2>
+                            </div>
+
+                            <span class="muted">
+                                ● <span data-i18n="updatedToday">Updated today</span>
+                            </span>
+
+                        </div>
+
+
+                        <div class="table-wrap">
+
+                            <table>
+
+                                <thead>
+                                    <tr>
+                                        <th data-i18n="market">Market</th>
+                                        <th data-i18n="distance">Distance</th>
+                                        <th>Min</th>
+                                        <th>Modal</th>
+                                        <th>Max</th>
+                                        <th data-i18n="trend">Trend</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="markets"></tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ================= PRODUCTS ================= -->
+
+                <section id="products" class="section">
+
+                    <div class="title">
+
+                        <div>
+                            <div class="eyebrow" data-i18n="marketplace">
+                                MARKETPLACE & HARVEST LOTS
+                            </div>
+
+                            <h1 data-i18n="productAvailabilityTitle">
+                                Product Availability
+                            </h1>
+
+                            <p class="muted" data-i18n="browseLots">
+                                Verified farmer lots, quality specifications, fruits & vegetables categories, and fast zero-waste clearance.
+                            </p>
+                        </div>
+
+                        <div class="actions-group">
+                            <button class="btn urgent-btn" data-modal="listing" id="urgentSellQuickBtn">
+                                ⚡ <span data-i18n="urgentSaleBtn">Urgent Clearance Sell</span>
+                            </button>
+                            <button class="btn primary" data-modal="listing" id="listProduceBtn">
+                                ＋ <span data-i18n="listProduce">List Produce</span>
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <!-- CATEGORY SUB-SECTIONS -->
+                    <div class="category-tabs" id="categoryTabs">
+                        <button class="cat-tab active" data-cat="all">🌱 All Produce (<span id="countAll">0</span>)</button>
+                        <button class="cat-tab" data-cat="vegetables">🥬 Vegetables (<span id="countVeg">0</span>)</button>
+                        <button class="cat-tab" data-cat="fruits">🍎 Fruits (<span id="countFruits">0</span>)</button>
+                        <button class="cat-tab" data-cat="grains">🌾 Grains & Pulses (<span id="countGrains">0</span>)</button>
+                        <button class="cat-tab urgent-tab" data-cat="urgent">⚡ Urgent / Fast Sell (<span id="countUrgent">0</span>)</button>
+                    </div>
+
+                    <div class="card filters">
+
+                        <input id="cropFilter" data-placeholder="searchCrop" placeholder="Search crop or fruit (e.g. Lemon, Onion, Mango, Pomegranate)...">
+
+                        <select id="gradeFilter">
+                            <option value="" data-i18n="allGrades">All grades</option>
+                            <option>Grade A</option>
+                            <option>Grade B</option>
+                            <option>Premium</option>
+                        </select>
+
+                        <select id="locationFilter">
+                            <option value="" data-i18n="allLocations">All locations</option>
+                            <option>Lasalgaon</option>
+                            <option>Nagpur</option>
+                            <option>Pune</option>
+                        </select>
+
+                        <button class="btn secondary" id="clear">
+                            <span data-i18n="clear">Clear</span>
+                        </button>
+
+                    </div>
+
+
+                    <div class="products" id="productsGrid"></div>
+
+                </section>
+
+
+                <!-- ================= COLLECTIVE ================= -->
+
+                <section id="collective" class="section">
+
+                    <div class="title">
+
+                        <div>
+                            <div class="eyebrow" data-i18n="fpoBulkBuying">
+                                FPO / BULK BUYING
+                            </div>
+
+                            <h1 data-i18n="farmerCollectiveMode">
+                                Farmer Collective Mode
+                            </h1>
+
+                            <p class="muted" data-i18n="aggregateProduce">
+                                Aggregate produce from farmers for larger buyers.
+                            </p>
+                        </div>
+
+                        <button class="btn primary" data-modal="collectiveModal">
+                            ＋ <span data-i18n="createCollectiveLot">Create Collective Lot</span>
+                        </button>
+
+                    </div>
+
+
+                    <div class="card collective">
+
+                        <div class="collective-icon">👥</div>
+
+                        <div>
+
+                            <div class="eyebrow" data-i18n="activeCollection">
+                                ACTIVE COLLECTION
+                            </div>
+
+                            <h2>Onion — Grade A Bulk Lot</h2>
+
+                            <p class="muted" data-i18n="collectionDetails">
+                                8 farmers joined · 160 q aggregated · 3 buyers interested
+                            </p>
+
+                            <div class="progress">
+                                <i></i>
+                            </div>
+
+                            <small>160 / 220 q target</small>
+
+                        </div>
+
+                        <strong>
+                            ₹3,480/q<br>
+                            <small data-i18n="currentOffer">current offer</small>
+                        </strong>
+
+                    </div>
+
+
+                    <div class="grid">
+
+                        <div class="card">
+
+                            <div class="head">
+                                <h2 data-i18n="farmerMembers">Farmer members</h2>
+                            </div>
+
+                            <div id="members"></div>
+
+                        </div>
+
+
+                        <div class="card">
+
+                            <div class="head">
+                                <h2 data-i18n="bulkBuyerDemand">Bulk buyer demand</h2>
+                            </div>
+
+                            <div id="buyers"></div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ================= SCHEDULE & LOGISTICS ================= -->
+
+                <section id="schedule" class="section">
+
+                    <div class="title">
+
+                        <div>
+                            <div class="eyebrow" data-i18n="logistics">
+                                LOGISTICS & TRANSPORTS
+                            </div>
+
+                            <h1 data-i18n="smartScheduleTitle">
+                                Smart Schedule & Logistics
+                            </h1>
+
+                            <p class="muted" data-i18n="coordinateLogistics">
+                                Live truck tracking, active lot pickups, transport assignment and calendar milestones.
+                            </p>
+                        </div>
+
+                        <button class="btn primary" data-modal="vehicleModal">
+                            🚚 <span data-i18n="assignVehicle">Assign Vehicle / Add Truck</span>
+                        </button>
+
+                    </div>
+
+                    <div class="schedule-layout">
+
+                        <!-- LEFT: Logistics & Live Tracking & Timeline -->
+                        <div class="schedule-main">
+
+                            <!-- ACTIVE ORDER & LIVE TRUCK TRACKER -->
+                            <div class="active-order-card" id="activeOrderCard">
+
+                                <div class="order-header">
+                                    <div>
+                                        <div class="eyebrow" data-i18n="activeOrder">ACTIVE PICKUP ORDER</div>
+                                        <h2>Onion — 80q (Grade A)</h2>
+                                        <p class="muted">
+                                            Destination: <b>Lasalgaon APMC Mandi</b> · Buyer: <b>FreshKart</b>
+                                        </p>
+                                    </div>
+
+                                    <button class="btn secondary" data-modal="vehicleModal" style="padding: 8px 12px; font-size: 11px;">
+                                        <span data-i18n="updateTransport">Update Transport</span>
+                                    </button>
+                                </div>
+
+                                <!-- LIVE TRUCK VISUALIZER -->
+                                <div class="truck-tracking-card">
+
+                                    <div class="tracking-top">
+                                        <div class="tracking-status">
+                                            <span class="pulse-dot"></span>
+                                            <b>LIVE VEHICLE TRACKING: <span id="truckStatusText">In Transit</span></b>
+                                        </div>
+                                        <span class="badge live" id="truckStatusBadge">ETA: 45 Mins</span>
+                                    </div>
+
+                                    <!-- Animated Route Line & Moving Truck -->
+                                    <div class="route-progress-bar">
+                                        <div class="route-line">
+                                            <div class="route-fill" id="routeFill" style="width: 65%;"></div>
+                                            <div class="truck-marker" id="truckMarker" style="left: 65%;">
+                                                <div class="truck-icon-pulse">🚚</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="route-stops">
+                                            <div class="stop passed">
+                                                <div class="stop-dot">✓</div>
+                                                <span>Farm (Nashik)</span>
+                                                <small>Dispatched 01:15 PM</small>
+                                            </div>
+                                            <div class="stop current">
+                                                <div class="stop-dot">•</div>
+                                                <span>Highway NH-60</span>
+                                                <small id="truckSpeed">En Route (42 km/h)</small>
+                                            </div>
+                                            <div class="stop upcoming">
+                                                <div class="stop-dot">●</div>
+                                                <span>Lasalgaon Mandi</span>
+                                                <small>Exp. 02:00 PM</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Vehicle Details -->
+                                    <div class="vehicle-details-grid">
+                                        <div class="v-detail">
+                                            <small data-i18n="vehicleNumber">Vehicle Number</small>
+                                            <b id="assignedVehicleNo">MH-15-AB-1234</b>
+                                        </div>
+                                        <div class="v-detail">
+                                            <small data-i18n="driverName">Driver Contact</small>
+                                            <b id="assignedDriver">Ramesh Shinde</b>
+                                            <span id="assignedPhone">+91 98765 43210</span>
+                                        </div>
+                                        <div class="v-detail">
+                                            <small data-i18n="transportAgency">Transport Agency</small>
+                                            <b id="assignedAgency">Kisan Express Logistics</b>
+                                        </div>
+                                        <div class="v-detail">
+                                            <small data-i18n="securityOtp">Pickup Verification PIN</small>
+                                            <b class="otp-code">4829</b>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- TIMELINE -->
+                            <div class="card timeline">
+
+                                <div class="head" style="margin-bottom: 16px;">
+                                    <div>
+                                        <div class="eyebrow" data-i18n="dailyMilestones">DAILY MILESTONES</div>
+                                        <h2 data-i18n="pickupTimeline">Pickup & Delivery Timeline</h2>
+                                    </div>
+                                </div>
+
+                                <div class="item">
+                                    <div class="time">08:30 AM</div>
+                                    <div class="dot"></div>
+                                    <div>
+                                        <strong data-i18n="priceCheck">Price check & Mandi Trends</strong>
+                                        <p data-i18n="priceCheckDesc">
+                                            Compare nearby mandi prices and active buyer demand.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="item">
+                                    <div class="time">10:00 AM</div>
+                                    <div class="dot"></div>
+                                    <div>
+                                        <strong data-i18n="qualityGrading">Quality grading & Bagging</strong>
+                                        <p data-i18n="qualityGradingDesc">
+                                            Grade your onion lot (Grade A) and pack in standardized 50kg mesh bags.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="item">
+                                    <div class="time">01:30 PM</div>
+                                    <div class="dot active-dot"></div>
+                                    <div>
+                                        <strong data-i18n="pickupWindow">Pickup window</strong>
+                                        <p id="timelinePickupText" data-i18n="pickupDesc">
+                                            FreshKart pickup · Vehicle <span id="timelineVehicle">MH-15-AB-1234</span> (Driver: Ramesh Shinde).
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="item">
+                                    <div class="time">04:00 PM</div>
+                                    <div class="dot"></div>
+                                    <div>
+                                        <strong data-i18n="paymentTracking">Delivery Confirmation & Payment</strong>
+                                        <p data-i18n="paymentTrackingDesc">
+                                            Instant bank settlement upon digital weighbridge receipt confirmation.
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- RIGHT: REAL-TIME CALENDAR -->
+                        <div class="schedule-sidebar">
+
+                            <div class="calendar-card">
+
+                                <div class="calendar-header">
+                                    <div class="cal-title-box">
+                                        <b id="calMonthYear">September 2026</b>
+                                        <span class="live-clock" id="liveClock">Live Clock</span>
+                                    </div>
+
+                                    <div class="cal-nav">
+                                        <button class="cal-btn" id="calPrev" title="Previous Month">‹</button>
+                                        <button class="cal-btn" id="calNext" title="Next Month">›</button>
+                                    </div>
+                                </div>
+
+                                <!-- Weekday headers -->
+                                <div class="calendar-weekdays">
+                                    <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+                                </div>
+
+                                <!-- Dynamic Days Grid -->
+                                <div class="calendar-days" id="calendarDays"></div>
+
+                                <!-- Selected Date Events Box -->
+                                <div class="cal-events-box">
+                                    <div class="eyebrow" id="selectedDateLabel">SCHEDULE FOR SELECTED DATE</div>
+                                    <div id="calendarEventsList">
+                                        <div class="cal-event-item highlight">
+                                            <span class="event-time">01:30 PM</span>
+                                            <div>
+                                                <b>🚚 FreshKart Onion Pickup</b>
+                                                <small>Vehicle: <span id="calEventVehicle">MH-15-AB-1234</span> · 80q</small>
+                                            </div>
+                                        </div>
+                                        <div class="cal-event-item">
+                                            <span class="event-time">04:00 PM</span>
+                                            <div>
+                                                <b>₹ Payment Settlement</b>
+                                                <small>Expected: ₹2,73,600</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- ================= FEEDBACK ================= -->
+
+                <section id="feedback" class="section">
+
+                    <div class="title">
+
+                        <div>
+                            <div class="eyebrow" data-i18n="trustCommunity">
+                                TRUST & COMMUNITY
+                            </div>
+
+                            <h1 data-i18n="reviewsFeedbackTitle">
+                                Reviews & Feedback
+                            </h1>
+
+                            <p class="muted" data-i18n="ratingsDescription">
+                                Ratings help farmers and buyers build reliable relationships.
+                            </p>
+                        </div>
+
+                        <button class="btn primary" data-modal="feedbackModal">
+                            ＋ <span data-i18n="giveFeedback">Give Feedback</span>
+                        </button>
+
+                    </div>
+
+
+                    <div class="grid">
+
+                        <div class="card center-card">
+
+                            <h1 class="rating-number">4.8</h1>
+
+                            <div class="stars">★★★★★</div>
+
+                            <small class="muted" data-i18n="averageBuyerRating">
+                                Average buyer rating
+                            </small>
+
+                        </div>
+
+
+                        <div class="card">
+
+                            <h2 data-i18n="whyRatingsMatter">
+                                Why ratings matter
+                            </h2>
+
+                            <p class="muted" data-i18n="ratingsMatterDescription">
+                                Transparent reviews help farmers identify reliable buyers
+                                and help buyers source consistently graded produce.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="feedback-grid" id="reviews"></div>
+
+                </section>
+
+
+                <!-- ================= CUSTOMER CARE & SUPPORT ================= -->
+
+                <section id="support" class="section">
+
+                    <div class="title">
+
+                        <div>
+                            <div class="eyebrow" style="color:#2d6930; font-weight: bold;" data-i18n="kisanHelplineUpper">
+                                🌾 KISAN SUPPORT & HELPLINE · किसान सहायता केंद्र
+                            </div>
+
+                            <h1 data-i18n="customerCareTitle">
+                                Customer Care & Farmer Support
+                            </h1>
+
+                            <p class="muted" data-i18n="customerCareSubtitle">
+                                Free 24x7 farmer assistance for mandi prices, quality grading, instant vehicle booking, and fair payment guarantees.
+                            </p>
+                        </div>
+
+                        <div class="care-badge-247">
+                            <span>🟢</span> <span data-i18n="supportAvailable247">24x7 Free Support Available</span>
+                        </div>
+
+                    </div>
+
+                    <!-- 3 Direct Channels -->
+                    <div class="care-channels-grid">
+
+                        <!-- Channel 1: Toll Free Call -->
+                        <div class="care-channel-card highlight">
+                            <div>
+                                <div class="care-icon-box">📞</div>
+                                <h3 data-i18n="tollFreeHelplineTitle">Toll-Free Kisan Helpline</h3>
+                                <div class="care-number">1800-889-2476</div>
+                                <p class="care-desc" data-i18n="tollFreeDesc">
+                                    100% Free Call · No mobile balance required. Direct advisory on fair price discovery and APMC rates.
+                                </p>
+                            </div>
+                            <a href="tel:18008892476" class="care-action-btn call-btn" onclick="toast('📞 Dialing Toll-Free Helpline: 1800-889-2476...')">
+                                📞 <span data-i18n="callTollFreeNow">Call Toll-Free Now</span>
+                            </a>
+                        </div>
+
+                        <!-- Channel 2: WhatsApp Support & Photo Grading -->
+                        <div class="care-channel-card">
+                            <div>
+                                <div class="care-icon-box" style="background:#eaf8ef;">💬</div>
+                                <h3 data-i18n="whatsappHelplineTitle">WhatsApp Kisan Seva</h3>
+                                <div class="care-number" style="color:#1b6e36;">+91 98200 45678</div>
+                                <p class="care-desc" data-i18n="whatsappDesc">
+                                    Send crop photos & voice notes for instant quality grade evaluation and buyer interest in 10 minutes.
+                                </p>
+                            </div>
+                            <button type="button" class="care-action-btn wa-btn" onclick="openWhatsAppBotModal()">
+                                💬 <span data-i18n="chatOnWhatsApp">Chat with WhatsApp Kisan Bot</span>
+                            </button>
+                        </div>
+
+                        <!-- Channel 3: Local Mandi Hub Officer -->
+                        <div class="care-channel-card">
+                            <div>
+                                <div class="care-icon-box" style="background:#e8f1f5;">👨‍🌾</div>
+                                <h3 data-i18n="mandiOfficerTitle">Local Mandi Field Officer</h3>
+                                <div class="care-number" style="color:#204b6b;">Lasalgaon / Nagpur / Pune</div>
+                                <p class="care-desc" data-i18n="mandiOfficerDesc">
+                                    On-ground weighbridge assistance, digital scale dispute resolution, and instant pickup coordination.
+                                </p>
+                            </div>
+                            <button class="care-action-btn mandi-btn" onclick="toast('📍 Connected with Lasalgaon & Nagpur APMC Field Officer Ramesh (+91 98765 43210)')">
+                                📍 <span data-i18n="contactFieldOfficer">Contact Local Mandi Officer</span>
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <!-- Instant Callback Request Form -->
+                    <div class="callback-box">
+                        <div class="callback-info">
+                            <h4 data-i18n="callbackBoxTitle">📞 Want Us to Call You Back? (निःशुल्क कॉल बैक)</h4>
+                            <p data-i18n="callbackBoxDesc">Enter your phone number below and our agricultural officer will call you back within 15 minutes.</p>
+                        </div>
+
+                        <form id="callbackForm" class="callback-form-row" onsubmit="event.preventDefault(); const nm = this.elements['cbName'].value; const ph = this.elements['cbPhone'].value; const top = this.elements['cbTopic'].value; syncCallbackToBackend(nm, ph, top, currentLanguage); this.reset();">
+                            <input type="text" name="cbName" data-placeholder="yourNamePlaceholder" placeholder="Your Name / किसान का नाम" required style="min-width: 150px;">
+                            <input type="tel" name="cbPhone" data-placeholder="mobilePlaceholder" placeholder="Mobile No. (e.g. 9876543210)" required pattern="[0-9]{10}" style="min-width: 170px;">
+                            <select name="cbTopic">
+                                <option value="price">📈 Mandi Price Advisory</option>
+                                <option value="truck">🚚 Vehicle / Transport Help</option>
+                                <option value="grading">🌾 Produce Grading & Listing</option>
+                                <option value="payment">₹ Payment & Disputes</option>
+                            </select>
+                            <button type="submit" class="btn primary" style="padding: 9px 16px; font-weight: bold;">
+                                📞 <span data-i18n="requestCallBackBtn">Request Call Back</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Multi-lingual Language Support Strip -->
+                    <div class="lang-support-strip">
+                        <span>🗣️ <b data-i18n="languagesSupportedTitle">Support Available in Your Mother Tongue (मातृभाषा):</b></span>
+                        <div class="lang-pills">
+                            <span class="lang-pill">हिन्दी (Hindi)</span>
+                            <span class="lang-pill">मराठी (Marathi)</span>
+                            <span class="lang-pill">English</span>
+                            <span class="lang-pill">ਪੰਜਾਬੀ (Punjabi)</span>
+                            <span class="lang-pill">ગુજરાતી (Gujarati)</span>
+                            <span class="lang-pill">தமிழ் (Tamil)</span>
+                            <span class="lang-pill">తెలుగు (Telugu)</span>
+                        </div>
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- ================= LISTING MODAL ================= -->
+
+    <div class="modal-bg" id="listing">
+
+        <div class="modal">
+
+            <button class="close" data-close>×</button>
+
+            <div class="eyebrow" data-i18n="newListing">NEW LISTING</div>
+
+            <h2 data-i18n="listYourProduce">List your produce</h2>
+
+            <p class="muted" data-i18n="listingDescription">
+                List vegetables, fruits, or grains with verified quality grading and optional urgent clearance.
+            </p>
+
+            <form id="listingForm">
+
+                <div class="form-row">
+                    <label>
+                        <span data-i18n="category">Category</span>
+                        <select name="category" id="listingCategory">
+                            <option value="vegetables">🥬 Vegetables</option>
+                            <option value="fruits">🍎 Fruits</option>
+                            <option value="grains">🌾 Grains & Pulses</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        <span data-i18n="crop">Crop / Fruit Name</span>
+                        <input name="crop" id="listingCrop" required placeholder="e.g. Lemon, Tomato, Pomegranate">
+                    </label>
+                </div>
+
+                <div class="form-row">
+
+                    <label>
+                        <span data-i18n="quantity">Quantity (q)</span>
+                        <input name="qty" type="number" required placeholder="e.g. 45">
+                    </label>
+
+                    <label>
+                        <span data-i18n="grade">Grade</span>
+
+                        <select name="grade">
+                            <option>Grade A</option>
+                            <option>Grade B</option>
+                            <option>Premium</option>
+                        </select>
+
+                    </label>
+
+                </div>
+
+                <div class="form-row">
+                    <label>
+                        <span data-i18n="expectedPrice">Expected price / q</span>
+                        <input name="price" type="number" required placeholder="e.g. 3400">
+                    </label>
+
+                    <label>
+                        <span data-i18n="location">Location</span>
+                        <input name="location" required placeholder="e.g. Lasalgaon / Nagpur / Pune" value="Lasalgaon">
+                    </label>
+                </div>
+
+                <label>
+                    <span data-i18n="imageUrl">Crop Image URL (Optional)</span>
+                    <input name="imageUrl" id="listingImageUrl" placeholder="Paste custom image URL or leave empty for auto-assign">
+                </label>
+
+                <div class="form-row">
+                    <label>
+                        <span>Size / Diameter Spec</span>
+                        <input name="sizeSpec" placeholder="e.g. 45mm - 55mm Uniform" value="45mm - 55mm Uniform">
+                    </label>
+
+                    <label>
+                        <span>Packaging Format</span>
+                        <input name="packagingSpec" placeholder="e.g. 20kg Crates / 50kg Bags" value="25kg Standard Crates">
+                    </label>
+                </div>
+
+                <!-- URGENT CLEARANCE TOGGLE -->
+                <div style="background: #fdf3f2; border: 1px solid #f5c6cb; border-radius: 8px; padding: 10px 12px; margin: 10px 0;">
+                    <label style="display: flex; align-items: center; gap: 8px; font-weight: bold; color: #c0392b; cursor: pointer; margin: 0;">
+                        <input type="checkbox" name="isUrgent" id="listingIsUrgent">
+                        <span>⚡ Mark as Urgent Fast-Sale (Zero-Waste Clearance)</span>
+                    </label>
+                    <small class="muted" style="display:block; margin-top: 4px; font-size: 10px; color: #88221b;">
+                        Select if produce is perishable surplus and you want to attract quick buyers within 24-48 hours.
+                    </small>
+                </div>
+
+                <button class="btn primary" type="submit">
+                    <span data-i18n="publishLot">Publish Produce Lot</span>
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= COLLECTIVE MODAL ================= -->
+
+    <div class="modal-bg" id="collectiveModal">
+
+        <div class="modal">
+
+            <button class="close" data-close>×</button>
+
+            <div class="eyebrow" data-i18n="collectiveMode">
+                COLLECTIVE MODE
+            </div>
+
+            <h2 data-i18n="createBulkLot">Create bulk lot</h2>
+
+            <form id="collectiveForm">
+
+                <label>
+                    <span data-i18n="crop">Crop</span>
+                    <input required placeholder="Onion">
+                </label>
+
+                <label>
+                    <span data-i18n="targetQuantity">Target quantity</span>
+                    <input type="number" required>
+                </label>
+
+                <label>
+                    <span data-i18n="minimumPrice">Minimum price</span>
+                    <input type="number" required>
+                </label>
+
+                <label>
+                    <span data-i18n="buyerRequirement">Buyer requirement</span>
+                    <textarea rows="3" data-placeholder="buyerRequirementPlaceholder" placeholder="Grade A, pickup within 3 days"></textarea>
+                </label>
+
+                <button class="btn primary" type="submit">
+                    <span data-i18n="createCollectiveLot">Create Collective Lot</span>
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= ALERT MODAL ================= -->
+
+    <div class="modal-bg" id="alert">
+
+        <div class="modal">
+
+            <button class="close" data-close>×</button>
+
+            <div class="eyebrow" data-i18n="priceAlert">
+                PRICE ALERT
+            </div>
+
+            <h2 data-i18n="createPriceAlert">Create price alert</h2>
+
+            <form id="alertForm">
+
+                <label>
+                    <span data-i18n="crop">Crop</span>
+
+                    <select>
+                        <option>Onion</option>
+                        <option>Tomato</option>
+                        <option>Wheat</option>
+                        <option>Soybean</option>
+                    </select>
+                </label>
+
+                <label>
+                    <span data-i18n="alertPrice">Alert price / q</span>
+                    <input type="number" value="3500">
+                </label>
+
+                <button class="btn primary" type="submit">
+                    <span data-i18n="activateAlert">Activate Alert</span>
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= FEEDBACK MODAL ================= -->
+
+    <div class="modal-bg" id="feedbackModal">
+
+        <div class="modal">
+
+            <button class="close" data-close>×</button>
+
+            <div class="eyebrow" data-i18n="yourVoiceMatters">
+                YOUR VOICE MATTERS
+            </div>
+
+            <h2 data-i18n="sendFeedback">Send feedback</h2>
+
+            <form id="feedbackForm">
+
+                <label>
+                    <span data-i18n="rating">Rating</span>
+
+                    <select name="rating">
+                        <option>5</option>
+                        <option>4</option>
+                        <option>3</option>
+                        <option>2</option>
+                        <option>1</option>
+                    </select>
+                </label>
+
+                <label>
+
+                    <span data-i18n="feedback">Feedback</span>
+
+                    <textarea name="message" rows="4" required data-placeholder="feedbackPlaceholder" placeholder="Tell us what can be improved..."></textarea>
+
+                </label>
+
+                <button class="btn primary" type="submit">
+                    <span data-i18n="submitFeedback">Submit Feedback</span>
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- ================= ASSIGN VEHICLE MODAL ================= -->
+
+    <div class="modal-bg" id="vehicleModal">
+
+        <div class="modal">
+
+            <button class="close" data-close>×</button>
+
+            <div class="eyebrow" data-i18n="transportDetails">
+                LOGISTICS & DISPATCH
+            </div>
+
+            <h2 data-i18n="assignVehicleTitle">Assign Truck & Transport Details</h2>
+
+            <p class="muted" data-i18n="assignVehicleDesc">
+                Link transport vehicle and driver details to your active pickup order timeline.
+            </p>
+
+            <form id="vehicleForm">
+
+                <label>
+                    <span data-i18n="selectOrder">Select Active Lot / Order</span>
+                    <select name="orderLot" id="vehicleOrderSelect">
+                        <option value="onion">🧅 Active Onion Lot (80q) — FreshKart [Lasalgaon APMC]</option>
+                        <option value="tomato">🍅 Tomato Lot (35q) — CityFresh [Nagpur Mandi]</option>
+                        <option value="wheat">🌾 Wheat Lot (120q) — AgroMart [Pune Mandi]</option>
+                        <option value="potato">🥔 Potato Lot (90q) — SpudCorp [Pune Mandi]</option>
+                    </select>
+                </label>
+
+                <label>
+                    <span data-i18n="vehicleNumberLabel">Vehicle Number (e.g., MH-XX-1234)</span>
+                    <input name="vehicleNo" id="inputVehicleNo" required placeholder="MH-15-AB-1234" value="MH-15-AB-1234">
+                </label>
+
+                <div class="form-row">
+
+                    <label>
+                        <span data-i18n="driverNameLabel">Driver Name</span>
+                        <input name="driverName" id="inputDriverName" required placeholder="Ramesh Shinde" value="Ramesh Shinde">
+                    </label>
+
+                    <label>
+                        <span data-i18n="driverPhoneLabel">Driver Contact Number</span>
+                        <input name="driverPhone" id="inputDriverPhone" required placeholder="+91 98765 43210" value="+91 98765 43210">
+                    </label>
+
+                </div>
+
+                <label>
+                    <span data-i18n="agencyNameLabel">Transport Agency Name</span>
+                    <input name="agencyName" id="inputAgencyName" placeholder="Kisan Express Logistics" value="Kisan Express Logistics">
+                </label>
+
+                <div class="form-row">
+
+                    <label>
+                        <span data-i18n="pickupTimeLabel">Pickup Time Window</span>
+                        <input name="pickupTime" id="inputPickupTime" value="01:30 PM">
+                    </label>
+
+                    <label>
+                        <span data-i18n="initialStatusLabel">Vehicle Status</span>
+                        <select name="status" id="inputStatus">
+                            <option value="In Transit">🚚 In Transit (En Route)</option>
+                            <option value="Dispatched">📦 Dispatched from Farm</option>
+                            <option value="Scheduled">⏱ Scheduled for Pickup</option>
+                            <option value="Arrived">🏁 Arrived at Mandi</option>
+                        </select>
+                    </label>
+
+                </div>
+
+                <button class="btn primary" type="submit">
+                    <span data-i18n="saveAndLinkVehicle">Submit & Link to Timeline</span>
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= QUALITY & PRODUCT INSPECTION MODAL ================= -->
+
+    <div class="modal-bg" id="qualityModal">
+
+        <div class="modal quality-modal-content">
+
+            <button class="close" data-close>×</button>
+
+            <div class="eyebrow" data-i18n="qualityInspection">
+                VERIFIED LOT & QUALITY INSPECTION
+            </div>
+
+            <div class="quality-modal-header">
+                <div class="q-modal-img-container">
+                    <img id="qModalImg" src="" alt="Crop preview" class="q-modal-img">
+                    <span id="qModalGradeBadge" class="grade-badge">Grade A</span>
+                    <span id="qModalUrgentBadge" class="urgent-ribbon" style="display:none;">⚡ URGENT CLEARANCE</span>
+                </div>
+
+                <div class="q-modal-main-info">
+                    <h2 id="qModalTitle">Lemon · Grade A</h2>
+                    <p class="muted" id="qModalFarmerInfo">
+                        👨‍🌾 Farmer: <b id="qModalFarmerName">Ramesh Patel</b> · 📍 <span id="qModalFarmerLocation">Lasalgaon, Nashik</span> · 4.9 ★ Verified
+                    </p>
+                    <div class="q-price-tag">
+                        <span class="q-price-val" id="qModalPrice">₹4,600</span>
+                        <small>/ quintal</small>
+                        <span class="q-qty-badge" id="qModalQty">45 q available</span>
+                    </div>
+                    <div id="qModalUrgentAlert" class="urgent-banner-box" style="display:none;">
+                        🔥 <b>Zero-Waste Fast Sale:</b> Harvested fresh. Spoilage risk in <span id="qModalHoursLeft">36 hrs</span>. Discounted direct price for fast bulk buyer pickup!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quality Spec Grid -->
+            <div class="quality-specs-section">
+                <h3 data-i18n="qualityParameters">🔍 Verified Quality & Grading Parameters</h3>
+                <div class="quality-spec-grid">
+                    <div class="q-spec-item">
+                        <span class="q-icon">📏</span>
+                        <div>
+                            <small>Size & Diameter</small>
+                            <b id="qSpecSize">45mm - 55mm (Uniform)</b>
+                        </div>
+                    </div>
+                    <div class="q-spec-item">
+                        <span class="q-icon">💧</span>
+                        <div>
+                            <small>Moisture & Freshness</small>
+                            <b id="qSpecFreshness">94% Fresh · High Juice Yield</b>
+                        </div>
+                    </div>
+                    <div class="q-spec-item">
+                        <span class="q-icon">📦</span>
+                        <div>
+                            <small>Packaging & Storage</small>
+                            <b id="qSpecPackaging">20kg Aerated Plastic Crates</b>
+                        </div>
+                    </div>
+                    <div class="q-spec-item">
+                        <span class="q-icon">🧪</span>
+                        <div>
+                            <small>Pesticide & Lab Test</small>
+                            <b id="qSpecPesticide">Zero Residue / GAP Certified</b>
+                        </div>
+                    </div>
+                    <div class="q-spec-item">
+                        <span class="q-icon">🛡️</span>
+                        <div>
+                            <small>Defect / Damage Limit</small>
+                            <b id="qSpecDefect">&lt; 2% (Strict Hand-Sorted)</b>
+                        </div>
+                    </div>
+                    <div class="q-spec-item">
+                        <span class="q-icon">⏱️</span>
+                        <div>
+                            <small>Harvest & Dispatch Time</small>
+                            <b id="qSpecHarvest">Harvested Yesterday · Ready for Dispatch</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="weighbridge-guarantee-note">
+                🔒 <b>Agro-Sphere Buyer Guarantee:</b> 100% Quality inspection verified at digital weighbridge before payment settlement.
+            </div>
+
+            <div class="modal-actions-row">
+                <button class="btn secondary" onclick="callAssignedFarmer()">
+                    📞 <span data-i18n="callFarmer">Call Farmer</span>
+                </button>
+                <button class="btn primary" onclick="openBuyModalFromCurrentQuality()">
+                    🛒 <span data-i18n="placeBuyRequest">Place Buy Order / Book Lot</span>
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= WHATSAPP KISAN BOT MODAL (DARK THEME) ================= -->
+    <div class="modal-bg" id="whatsappBotModal">
+        <div class="modal whatsapp-modal-content dark-theme">
+            <!-- WhatsApp Web Header -->
+            <div class="wa-header">
+                <div class="wa-profile">
+                    <img src="assets/ai_farmer_assistant.png" alt="Agro-Sphere Kisan Seva" class="wa-avatar">
+                    <div class="wa-title-area">
+                        <h4>+91 98200 45678 <span class="wa-verified">✔</span></h4>
+                        <div class="wa-status" id="waStatusHeader">online · Agro-Sphere Kisan Help Center</div>
+                    </div>
+                </div>
+                <div class="wa-header-icons">
+                    <button class="wa-icon-btn" onclick="toast('📹 Calling Agro-Sphere Agricultural Officer (Video)...')">📹</button>
+                    <button class="wa-icon-btn" onclick="toast('📞 Calling Toll-Free Helpline: 1800-889-2476...')">📞</button>
+                    <button class="wa-icon-btn" onclick="toast('🔍 Search chat...')">🔍</button>
+                    <button class="close wa-close-btn" data-close>×</button>
+                </div>
+            </div>
+
+            <!-- WhatsApp Chat Body -->
+            <div class="wa-chat-body" id="waChatBody">
+                <div class="wa-date-divider"><span>Today</span></div>
+                
+                <div class="wa-encrypted-notice">
+                    🔒 Messages and calls are end-to-end encrypted. Only people in this chat can read, listen to, or share them.
+                </div>
+
+                <div class="wa-msg bot">
+                    🙏 <b>नमस्ते किसान भाई! Welcome to Agro-Sphere Kisan Help Center!</b><br><br>
+                    I am your <b>Automated WhatsApp Assistant</b>. Ask me anything or choose a quick option below:<br><br>
+                    🧅 <b>Mandi Rates:</b> Get real-time APMC bhav & 3-day selling forecast.<br>
+                    📸 <b>AI Photo Grading:</b> Send crop photo to check Grade A/B, moisture & price.<br>
+                    🚚 <b>Truck Tracking:</b> Real-time GPS location of vehicle <code>MH-15-AB-1234</code>.<br>
+                    👨‍🌾 <b>APMC Field Officer:</b> Connect with Lasalgaon Weighbridge desk.<br>
+                    <div class="wa-time">12:30 PM</div>
+
+                    <div class="wa-quick-options">
+                        <button class="wa-option-btn" onclick="sendWhatsAppBotOption('📈 Mandi Bhav (कांदा व टोमॅटो आजचा भाव)')">📈 Mandi Bhav (कांदा व टोमॅटो भाव)</button>
+                        <button class="wa-option-btn" onclick="sendWhatsAppBotOption('📸 Test AI Crop Photo Grading')">📸 Test AI Crop Photo Grading (फोटो ग्रेडिंग)</button>
+                        <button class="wa-option-btn" onclick="sendWhatsAppBotOption('🚚 Track My Transport Truck (MH-15-AB-1234)')">🚚 Track My Truck (गाड़ी कहां है?)</button>
+                        <button class="wa-option-btn" onclick="sendWhatsAppBotOption('👨‍🌾 Connect with APMC Field Officer')">👨‍🌾 Connect with APMC Officer (अधिकारी संपर्क)</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WhatsApp Input Footer -->
+            <div class="wa-footer">
+                <input type="file" id="waCropPhotoUpload" accept="image/*" style="display:none;" onchange="handleWhatsAppPhotoUpload(event)">
+                <button type="button" class="wa-footer-icon-btn" onclick="toast('😄 Emojis: 🧅 🍅 🌾 🥭 🍋 🥔')">😄</button>
+                <button type="button" class="wa-footer-icon-btn" onclick="document.getElementById('waCropPhotoUpload').click()" title="Attach Crop Photo for AI Grading">📎</button>
+                <input type="text" id="waTextInput" class="wa-input" placeholder="Type a message (e.g. Onion bhav, Track truck)..." onkeypress="if(event.key==='Enter') sendWhatsAppBotUserMessage()">
+                <button type="button" class="wa-footer-icon-btn" onclick="triggerWhatsAppVoiceInput()" title="Voice Message / Voice Note">🎙️</button>
+                <button type="button" class="wa-send-btn" onclick="sendWhatsAppBotUserMessage()" title="Send Message">➤</button>
+            </div>
+            
+            <div class="wa-bottom-bar">
+                <span>🟢 <b>Active Automated Kisan Bot</b> · Instant Replies 24x7</span>
+                <a href="https://wa.me/919820045678?text=Hello%20AgroSphere%20Kisan%20Help%20Center" target="_blank" class="wa-real-app-link">
+                    Open in External App ↗
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= BUY ORDER MODAL ================= -->
+    <div class="modal-bg" id="buyOrderModal" style="display:none;">
+        <div class="modal modal-buy-content">
+            <button class="close" data-close onclick="closeBuyModal()">×</button>
+            <div class="eyebrow" style="color:var(--green); font-weight:bold;">🛒 DIRECT FARMER-TO-BUYER PURCHASE</div>
+            <h2 style="margin:4px 0 12px 0; font-size:20px; color:#173a25;">Place Buy Order / Lot Booking</h2>
+
+            <div class="buy-produce-header">
+                <div class="buy-produce-icon" id="buyModalEmoji">🧅</div>
+                <div class="buy-produce-details">
+                    <h3 id="buyModalCropTitle">Onion · Grade A (Lasalgaon Red)</h3>
+                    <div class="buy-produce-price">
+                        <span id="buyModalUnitPrice">₹3,420</span> <span style="font-size:12px; color:var(--muted); font-weight:normal;">/ quintal</span>
+                        <span class="badge" id="buyModalGradeBadge" style="margin-left:8px; background:#dcfce7; color:#15803d; font-size:11px;">Grade A</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="beginner-guarantee-note">
+                <span>🛡️</span>
+                <div>
+                    <b>100% Escrow & Weighbridge Guarantee:</b>
+                    Your payment is safely held in escrow and released to the farmer only after electronic weighbridge & quality verification.
+                </div>
+            </div>
+
+            <form id="buyOrderForm" onsubmit="handleBuyOrderSubmit(event)">
+                <input type="hidden" id="buyModalCrop" value="Onion">
+                <input type="hidden" id="buyModalGrade" value="Grade A">
+                <input type="hidden" id="buyModalPrice" value="3420">
+
+                <div class="buy-form-grid">
+                    <div class="buy-input-group">
+                        <label for="buyModalQty">Purchase Quantity (Quintals):</label>
+                        <input type="number" id="buyModalQty" min="1" max="500" value="20" required oninput="calculateBuyBilling()">
+                    </div>
+                    <div class="buy-input-group">
+                        <label for="buyModalLocation">Delivery Mandi / Hub:</label>
+                        <input type="text" id="buyModalLocation" value="Lasalgaon APMC Terminal Gate #2" required>
+                    </div>
+                </div>
+
+                <div class="buy-form-grid">
+                    <div class="buy-input-group">
+                        <label for="buyModalBuyerName">Buyer / Company Name:</label>
+                        <input type="text" id="buyModalBuyerName" value="FreshKart Wholesale" required>
+                    </div>
+                    <div class="buy-input-group">
+                        <label for="buyModalBuyerPhone">Buyer Mobile (for WhatsApp Tracking):</label>
+                        <input type="text" id="buyModalBuyerPhone" value="+91 98765 43210" required>
+                    </div>
+                </div>
+
+                <!-- Billing Summary Box -->
+                <div class="buy-billing-summary">
+                    <div class="billing-row">
+                        <span>Produce Subtotal (<span id="billingQtyLabel">20</span>q × ₹<span id="billingRateLabel">3,420</span>/q):</span>
+                        <b id="billingSubtotal">₹68,400</b>
+                    </div>
+                    <div class="billing-row">
+                        <span>APMC Mandi Cess & Grading (1.5%):</span>
+                        <span id="billingCess">₹1,026</span>
+                    </div>
+                    <div class="billing-row">
+                        <span>AgroSphere Escrow & Weighbridge Assurance:</span>
+                        <span style="color:#15803d; font-weight:bold;">FREE (₹0)</span>
+                    </div>
+                    <div class="billing-row total">
+                        <span>Total Payable Amount:</span>
+                        <span id="billingTotal">₹69,426</span>
+                    </div>
+                </div>
+
+                <div class="modal-actions-row">
+                    <button type="button" class="btn secondary" onclick="closeBuyModal()">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn primary" id="btnConfirmBuy" style="font-weight:bold; background:#16a34a; border-color:#16a34a;">
+                        Confirm Order & Generate Live Tracking
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= ORDERS & CROSS-DEVICE TRACKING MODAL ================= -->
+    <div class="modal-bg" id="orderTrackingModal" style="display:none;">
+        <div class="modal modal-tracking-content">
+            <button class="close modal-exit-btn" id="btnExitOrdersTrackingTop" data-close onclick="closeOrdersTrackingModal(event)" aria-label="Close" title="Exit / Close window">×</button>
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;">
+                <div>
+                    <div class="eyebrow" style="color:var(--green); font-weight:bold;">🚚 CROSS-DEVICE REAL-TIME LOGISTICS</div>
+                    <h2 style="margin:2px 0 6px 0; font-size:22px; color:#173a25;">My Orders & Delivery Tracking</h2>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <button type="button" class="btn secondary" onclick="fetchAndRenderLiveOrders()" style="font-size:12px; padding:7px 12px;">
+                        🔄 Refresh Tracking
+                    </button>
+                    <button type="button" class="btn-tracking-exit" id="btnExitOrdersTrackingHeader" onclick="closeOrdersTrackingModal(event)" title="Exit orders tracking modal">
+                        ✕ Exit / Close
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cross-Device Sync Notice -->
+            <div class="cross-device-sync-banner">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                <div>
+                    <b>Universal Cross-Device Access:</b> All order data is stored on the central AgroSphere cloud. You can track this shipment anytime on any mobile device using your phone number or Order ID.
+                </div>
+            </div>
+
+            <!-- Search / Lookup Bar -->
+            <div style="display:flex; gap:8px; margin-bottom:18px;">
+                <input type="text" id="trackOrderSearchInput" placeholder="Enter Order ID (e.g. ORD-84102) or Buyer Phone..." style="flex:1; padding:9px 14px; border:1px solid #cfded0; border-radius:8px; font-size:13px;" onkeydown="if(event.key==='Enter') searchLiveOrder()">
+                <button type="button" class="btn primary" onclick="searchLiveOrder()" style="padding:9px 16px; font-size:13px;">
+                    🔍 Track
+                </button>
+            </div>
+
+            <!-- Dynamic Orders Container -->
+            <div id="liveOrdersListContainer" style="display:flex; flex-direction:column; gap:16px;">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Bottom Exit / Close Footer -->
+            <div class="modal-tracking-footer" style="margin-top:22px; padding-top:16px; border-top:1px solid #edf4ec; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <div style="font-size:12px; color:var(--muted); display:flex; align-items:center; gap:6px;">
+                    <span>💡 Tip: Click outside or press</span>
+                    <kbd style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:4px; padding:2px 6px; font-size:11px; font-family:monospace; font-weight:bold;">ESC</kbd>
+                    <span>to exit anytime</span>
+                </div>
+                <button type="button" class="btn-tracking-footer-exit" id="btnExitOrdersTrackingFooter" onclick="closeOrdersTrackingModal(event)" title="Back to dashboard">
+                    ✕ Back to Dashboard / Exit
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=6.1.0"></script>
+
+</body>
+
+</html>

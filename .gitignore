@@ -1,0 +1,32 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Temporary / test screenshots
+screenshot_*.png
+test_*.png
+test_*.pptx
+buy_modal_test.png
+dashboard_activity_feed.png
+dashboard_soybean_purchased.png
+hero_schedule_shot.png
+tracking_modal_test.png
+visual_dashboard_activities.png
+final_slide5.png
+
+# Executables
+cloudflared.exe
+*.exe
+*.zip
+
+# Temporary test scripts
+test_*.py
+search_keys.py
+find_fn.py
+apply_nlp*.py
+integrate_gemini.py
+list_gemini_models.py
+
+# Backups
+*_backup.*

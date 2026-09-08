@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agro-Sphere — Farmer & FPO Authentication Portal</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="style.css?v=6.0.0">
+    <style>
+        :root {
+            --auth-bg-gradient: linear-gradient(135deg, #0d2617 0%, #173a25 50%, #1e4d31 100%);
+        }
+
+        body.auth-body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--auth-bg-gradient);
+            padding: 24px 16px;
+            position: relative;
+            overflow-x: hidden;
+            font-family: Inter, system-ui, -apple-system, sans-serif;
+        }
+
+        /* Decorative background elements */
+        .auth-bg-shapes {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.25;
+        }
+
+        .blob-1 {
+            width: 480px;
+            height: 480px;
+            background: #b8e86a;
+            top: -100px;
+            right: -100px;
+        }
+
+        .blob-2 {
+            width: 400px;
+            height: 400px;
+            background: #2b7428;
+            bottom: -80px;
+            left: -80px;
+        }
+
+        .blob-3 {
+            width: 300px;
+            height: 300px;
+            background: #e2c044;
+            bottom: 20%;
+            right: 15%;
+            opacity: 0.12;
+        }
+
+        .auth-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1020px;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1.05fr 1.35fr;
+            min-height: 640px;
+            animation: authFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes authFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(18px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Left Branding Panel */
+        .auth-brand-panel {
+            background: linear-gradient(160deg, #173a25 0%, #235436 100%);
+            color: #ffffff;
+            padding: 44px 36px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .auth-brand-panel::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 80% 20%, rgba(184, 232, 106, 0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .auth-brand-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .auth-brand-logo {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #ffffff;
+            display: grid;
+            place-items: center;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+            border: 2px solid var(--lime);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .auth-brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .auth-brand-title {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .auth-brand-subtitle {
+            font-size: 12px;
+            color: #b8e86a;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .auth-hero-copy {
+            margin: 36px 0 24px;
+        }
+
+        .auth-hero-copy h2 {
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1.25;
+            margin: 0 0 12px;
+            color: #ffffff;
+        }
+
+        .auth-hero-copy h2 span {
+            color: var(--lime);
+        }
+
+        .auth-hero-copy p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #c8ded0;
+            margin: 0;
+        }
+
+        /* Live Preview Card on Left Panel */
+        .live-preview-box {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin-top: 10px;
+        }
+
+        .live-preview-box small {
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-size: 10px;
+            color: #b8e86a;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .live-preview-user {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .preview-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #b8e86a;
+            color: #173a25;
+            font-weight: 800;
+            font-size: 18px;
+            display: grid;
+            place-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .preview-details {
+            overflow: hidden;
+        }
+
+        .preview-name {
+            font-weight: 700;
+            font-size: 16px;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .preview-handle {
+            font-size: 12px;
+            color: #b8e86a;
+            font-weight: 600;
+            font-family: monospace;
+            letter-spacing: 0.3px;
+        }
+
+        .preview-badge {
+            display: inline-block;
+            margin-top: 4px;
+            background: rgba(184, 232, 106, 0.18);
+            color: #d8f5a2;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .auth-brand-footer {
+            font-size: 11px;
+            color: #92b8a0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Right Form Panel */
+        .auth-form-panel {
+            padding: 40px 44px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #ffffff;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        /* Tab Switcher */
+        .auth-tabs {
+            display: flex;
+            background: #edf3ec;
+            padding: 5px;
+            border-radius: 12px;
+            margin-bottom: 26px;
+            gap: 4px;
+        }
+
+        .auth-tab-btn {
+            flex: 1;
+            padding: 10px 14px;
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            font-size: 13.5px;
+            color: #4b6353;
+            border-radius: 9px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+        }
+
+        .auth-tab-btn.active {
+            background: #ffffff;
+            color: var(--green);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .auth-tab-btn:hover:not(.active) {
+            color: #173a25;
+        }
+
+        .form-heading {
+            margin-bottom: 22px;
+        }
+
+        .form-heading h3 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--green);
+            margin: 0 0 6px;
+        }
+
+        .form-heading p {
+            font-size: 13.5px;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        /* Form Controls */
+        .field-group {
+            margin-bottom: 16px;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .field-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #24382c;
+            margin-bottom: 6px;
+        }
+
+        .field-hint {
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: normal;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            font-size: 16px;
+            color: #7b9483;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            border: 1.5px solid #d8e4d7;
+            border-radius: 11px;
+            font-size: 14px;
+            color: #1c2e22;
+            background: #fbfdfb;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .auth-input:focus {
+            border-color: var(--primary);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(43, 116, 40, 0.15);
+        }
+
+        /* Modern Web Guidance validation styles */
+        .auth-input:user-invalid {
+            border-color: #d93025;
+            background-color: #fff8f8;
+        }
+
+        .auth-input:user-valid {
+            border-color: #2b7428;
+            background-color: #f6fbf6;
+        }
+
+        .field-error-msg {
+            display: none;
+            color: #d93025;
+            font-size: 11.5px;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .auth-input:user-invalid + .field-error-msg {
+            display: block;
+        }
+
+        /* Username Handle Prefix */
+        .handle-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .handle-prefix {
+            position: absolute;
+            left: 42px;
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 14px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .handle-input {
+            padding-left: 58px !important;
+            font-family: monospace;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .username-status {
+            position: absolute;
+            right: 12px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+        }
+
+        .username-status.available {
+            color: #2b7428;
+        }
+
+        .username-status.taken {
+            color: #d93025;
+        }
+
+        /* Password toggle */
+        .password-toggle-btn {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #7b9483;
+            cursor: pointer;
+            padding: 4px;
+            font-size: 14px;
+        }
+
+        .password-toggle-btn:hover {
+            color: var(--green);
+        }
+
+        /* Role Selector Pills */
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .role-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border: 1.5px solid #d8e4d7;
+            border-radius: 10px;
+            background: #fbfdfb;
+            cursor: pointer;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #354e3d;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .role-pill input[type="radio"] {
+            display: none;
+        }
+
+        .role-pill.selected {
+            border-color: var(--primary);
+            background: #eff8ee;
+            color: var(--primary-dark);
+            box-shadow: 0 2px 6px rgba(43, 116, 40, 0.12);
+        }
+
+        /* Password strength bar */
+        .strength-bar {
+            height: 4px;
+            background: #e5ece4;
+            border-radius: 4px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        /* Submit Button */
+        .btn-submit {
+            width: 100%;
+            padding: 13px 20px;
+            border: none;
+            border-radius: 11px;
+            background: linear-gradient(135deg, #2b7428 0%, #1f5a25 100%);
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(31, 90, 37, 0.3);
+            transition: all 0.2s ease;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(31, 90, 37, 0.38);
+            background: linear-gradient(135deg, #328730 0%, #23652a 100%);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        /* Quick Demo Login Chips */
+        .quick-demo-section {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px dashed #d8e4d7;
+        }
+
+        .quick-demo-title {
+            font-size: 11.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 700;
+            color: var(--muted);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .demo-chips-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .demo-chip-btn {
+            background: #f4f8f3;
+            border: 1px solid #d2e4ce;
+            border-radius: 9px;
+            padding: 8px 10px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .demo-chip-btn:hover {
+            background: #e7f4e4;
+            border-color: #a8cf9f;
+            transform: translateY(-1px);
+        }
+
+        .demo-chip-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #2b7428;
+            color: #ffffff;
+            display: grid;
+            place-items: center;
+            font-size: 11px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .demo-chip-info {
+            overflow: hidden;
+            line-height: 1.2;
+        }
+
+        .demo-chip-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: #1f3d29;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .demo-chip-handle {
+            font-size: 10.5px;
+            color: #587962;
+            font-family: monospace;
+        }
+
+        /* Remember & Forgot Row */
+        .auth-extra-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12.5px;
+            margin-top: 10px;
+        }
+
+        .remember-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #354e3d;
+            cursor: pointer;
+        }
+
+        .link-text {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .link-text:hover {
+            text-decoration: underline;
+        }
+
+        /* Toast notification */
+        .auth-toast {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #173a25;
+            color: #ffffff;
+            padding: 12px 22px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(184, 232, 106, 0.3);
+        }
+
+        .auth-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .auth-toast.success {
+            background: #1f5a25;
+            border-color: #b8e86a;
+        }
+
+        .auth-toast.error {
+            background: #6a1a1a;
+            border-color: #ff8b8b;
+        }
+
+        /* Responsive Breakpoint */
+        @media (max-width: 860px) {
+            .auth-container {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+
+            .auth-brand-panel {
+                padding: 30px 24px;
+            }
+
+            .auth-hero-copy h2 {
+                font-size: 22px;
+            }
+
+            .auth-form-panel {
+                padding: 30px 24px;
+            }
+
+            .field-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body class="auth-body">
+
+    <!-- Decorative Animated Glows -->
+    <div class="auth-bg-shapes">
+        <div class="bg-blob blob-1"></div>
+        <div class="bg-blob blob-2"></div>
+        <div class="bg-blob blob-3"></div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="authToast" class="auth-toast" role="alert" aria-live="polite"></div>
+
+    <div class="auth-container">
+
+        <!-- LEFT BRANDING & LIVE IDENTITY PREVIEW PANEL -->
+        <aside class="auth-brand-panel">
+
+            <div>
+                <div class="auth-brand-header">
+                    <div class="auth-brand-logo">
+                        <img src="assets/logo.png" alt="Agro-Sphere Logo">
+                    </div>
+                    <div>
+                        <div class="auth-brand-title">Agro-Sphere</div>
+                        <div class="auth-brand-subtitle">Smart Kisan Platform</div>
+                    </div>
+                </div>
+
+                <div class="auth-hero-copy">
+                    <h2>Empowering Indian Farmers with <span>Transparent AI Mandis</span></h2>
+                    <p>
+                        Sign in to access live APMC auction rates, direct collective pooling, certified buyer bids, and our bilingual Kisan Sahayika voice intelligence.
+                    </p>
+                </div>
+
+                <!-- LIVE IDENTITY CARD PREVIEW -->
+                <div class="live-preview-box">
+                    <small>⚡ Your Dashboard Identity Card</small>
+                    <div class="live-preview-user">
+                        <div class="preview-avatar" id="liveAvatar">RP</div>
+                        <div class="preview-details">
+                            <div class="preview-name" id="liveName">Ramesh Patel</div>
+                            <div class="preview-handle" id="liveHandle">@ramesh_farmer</div>
+                            <span class="preview-badge" id="liveRole">🌾 Farmer / FPO</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="auth-brand-footer">
+                <span>🌾 Built for Smart India Hackathon (SIH 2026)</span>
+                <span>🔒 256-bit Secure Portal</span>
+            </div>
+
+        </aside>
+
+
+        <!-- RIGHT AUTHENTICATION FORMS PANEL -->
+        <main class="auth-form-panel">
+
+            <!-- TAB SWITCHER -->
+            <div class="auth-tabs" role="tablist">
+                <button type="button" class="auth-tab-btn active" id="tabSignInBtn" onclick="switchAuthTab('signin')" role="tab" aria-selected="true" aria-controls="signInForm">
+                    🔑 Sign In
+                </button>
+                <button type="button" class="auth-tab-btn" id="tabRegisterBtn" onclick="switchAuthTab('register')" role="tab" aria-selected="false" aria-controls="registerForm">
+                    ✨ Create Account
+                </button>
+            </div>
+
+
+            <!-- ================= FORM 1: SIGN IN ================= -->
+            <form id="signInForm" onsubmit="handleSignInSubmit(event)" novalidate>
+
+                <div class="form-heading">
+                    <h3>Welcome back! 👋</h3>
+                    <p>Enter your credentials to access your personalized mandi dashboard.</p>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label" for="loginId">
+                        Username, Mobile, or Email
+                    </label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input
+                            type="text"
+                            id="loginId"
+                            name="username"
+                            class="auth-input"
+                            placeholder="e.g. ramesh_farmer or 9876543210"
+                            required
+                            autocomplete="username"
+                        >
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">
+                        <label for="loginPassword">Password</label>
+                    </div>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input
+                            type="password"
+                            id="loginPassword"
+                            name="password"
+                            class="auth-input"
+                            placeholder="Enter your account password"
+                            required
+                            autocomplete="current-password"
+                        >
+                        <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('loginPassword', this)" aria-label="Toggle password visibility">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+
+                <div class="auth-extra-row">
+                    <label class="remember-wrap">
+                        <input type="checkbox" id="rememberMe" checked>
+                        <span>Keep me logged in</span>
+                    </label>
+                    <a href="javascript:void(0)" onclick="toast('Password reset link has been dispatched via SMS to your registered number.')" class="link-text">
+                        Forgot Password?
+                    </a>
+                </div>
+
+                <button type="submit" class="btn-submit" id="signInSubmitBtn">
+                    <span>Sign In to Dashboard</span> ➔
+                </button>
+
+                <div style="margin-top: 14px; text-align: center;">
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                        <span style="flex:1; height:1px; background:#e2ecd0;"></span>
+                        <span style="font-size:11px; color:#6b8772; text-transform:uppercase; font-weight:700;">OR EXPLORE WITHOUT ACCOUNT</span>
+                        <span style="flex:1; height:1px; background:#e2ecd0;"></span>
+                    </div>
+                    <button id="btnGuestLogin" type="button" class="btn-guest-explore" onclick="continueAsGuest()" style="width: 100%; padding: 11px 16px; background: linear-gradient(135deg, #184227 0%, #15803d 100%); color: #ffffff; border: none; border-radius: 10px; font-size: 13.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 3px 12px rgba(21, 128, 61, 0.28); transition: transform 0.2s, background 0.2s;">
+                        <span>🚀 Explore as Guest Visitor (Instant Demo)</span>
+                    </button>
+                </div>
+
+                <!-- VERIFIED ACCOUNT HOLDER CREDENTIALS -->
+                <div class="quick-demo-section">
+                    <div class="quick-demo-title">
+                        🌾 Verified Account Holder (1-Click Instant Login)
+                    </div>
+                    <div class="demo-chips-grid">
+                        <button type="button" class="demo-chip-btn" onclick="quickLogin('ramesh_farmer', 'agri123', 'Ramesh Patel', 'Verified Account Holder')" style="grid-column: 1 / -1;">
+                            <div class="demo-chip-avatar">RP</div>
+                            <div class="demo-chip-info">
+                                <div class="demo-chip-name">Ramesh Patel</div>
+                                <div class="demo-chip-handle">@ramesh_farmer · Verified Account Holder</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+
+
+            <!-- ================= FORM 2: CREATE ACCOUNT (REGISTER) ================= -->
+            <form id="registerForm" style="display: none;" onsubmit="handleRegisterSubmit(event)" novalidate>
+
+                <div class="form-heading">
+                    <h3>Create Your Account 🌾</h3>
+                    <p>Set up your profile, choose your personal username, and get personalized mandi alerts.</p>
+                </div>
+
+                <!-- FULL NAME -->
+                <div class="field-group">
+                    <label class="field-label" for="regFullName">
+                        <span>Your Full Name *</span>
+                        <span class="field-hint">e.g. Ramesh Patel</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input
+                            type="text"
+                            id="regFullName"
+                            name="name"
+                            class="auth-input"
+                            placeholder="Enter your full name"
+                            required
+                            autocomplete="name"
+                            oninput="onNameInput(this.value)"
+                        >
+                    </div>
+                    <div class="field-error-msg">Please enter your full name (minimum 2 characters).</div>
+                </div>
+
+                <!-- PERSONAL USERNAME (DYNAMIC GENERATOR & LIVE AVAILABILITY) -->
+                <div class="field-group">
+                    <label class="field-label" for="regUsername">
+                        <span>Your Personal Username Handle *</span>
+                        <span class="field-hint">Shown on your dashboard & farmer lots</span>
+                    </label>
+                    <div class="input-wrapper handle-wrapper">
+                        <span class="input-icon">🏷️</span>
+                        <span class="handle-prefix">@</span>
+                        <input
+                            type="text"
+                            id="regUsername"
+                            name="username"
+                            class="auth-input handle-input"
+                            placeholder="username_handle"
+                            required
+                            autocomplete="username"
+                            pattern="^[a-zA-Z0-9_]{3,24}$"
+                            oninput="onUsernameInput(this.value)"
+                        >
+                        <div id="usernameStatus" class="username-status available">
+                            ✓ Available
+                        </div>
+                    </div>
+                    <div class="field-hint" style="margin-top: 4px;">
+                        💡 Auto-generated from your name. You can customize it anytime (letters, numbers, underscores).
+                    </div>
+                </div>
+
+                <!-- ROLE SELECTION -->
+                <div class="field-group">
+                    <label class="field-label">
+                        <span>Select Your Role *</span>
+                    </label>
+                    <div class="role-grid">
+                        <label class="role-pill selected" onclick="selectRole(this, 'Farmer / FPO')">
+                            <input type="radio" name="role" value="Farmer / FPO" checked>
+                            <span>🌾 Farmer / FPO</span>
+                        </label>
+                        <label class="role-pill" onclick="selectRole(this, 'FPO Leader')">
+                            <input type="radio" name="role" value="FPO Leader">
+                            <span>👥 FPO Leader</span>
+                        </label>
+                        <label class="role-pill" onclick="selectRole(this, 'Trader / Arhatiya')">
+                            <input type="radio" name="role" value="Trader / Arhatiya">
+                            <span>🏪 Trader / Arhatiya</span>
+                        </label>
+                        <label class="role-pill" onclick="selectRole(this, 'Wholesale Buyer')">
+                            <input type="radio" name="role" value="Wholesale Buyer">
+                            <span>🏢 Wholesale Buyer</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <!-- PHONE / EMAIL -->
+                    <div class="field-group">
+                        <label class="field-label" for="regPhone">
+                            <span>Mobile or Email *</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">📱</span>
+                            <input
+                                type="text"
+                                id="regPhone"
+                                name="phone_email"
+                                class="auth-input"
+                                placeholder="e.g. 9876543210"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <!-- REGION / MANDI -->
+                    <div class="field-group">
+                        <label class="field-label" for="regLocation">
+                            <span>Primary Mandi / Region</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">📍</span>
+                            <input
+                                type="text"
+                                id="regLocation"
+                                name="location"
+                                class="auth-input"
+                                placeholder="e.g. Lasalgaon, Nashik"
+                                value="Lasalgaon, Nashik"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PASSWORD -->
+                <div class="field-group">
+                    <label class="field-label" for="regPassword">
+                        <span>Create Password *</span>
+                        <span class="field-hint">Min 6 characters</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input
+                            type="password"
+                            id="regPassword"
+                            name="password"
+                            class="auth-input"
+                            placeholder="Create a strong password"
+                            required
+                            minlength="6"
+                            autocomplete="new-password"
+                            oninput="updatePasswordStrength(this.value)"
+                        >
+                        <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('regPassword', this)" aria-label="Toggle password visibility">
+                            👁️
+                        </button>
+                    </div>
+                    <div class="strength-bar">
+                        <div class="strength-fill" id="strengthFill"></div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="registerSubmitBtn">
+                    <span>Create Account & Open Dashboard</span> ➔
+                </button>
+
+            </form>
+
+        </main>
+
+    </div>
+
+
+    <!-- CLIENT AUTH JAVASCRIPT CONTROLLER -->
+    <script>
+        const API_BASE = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
+            ? 'http://127.0.0.1:8000'
+            : '';
+
+        // Default registered accounts stored in localStorage for instant offline access
+        const DEFAULT_USERS = [
+            {
+                id: 1,
+                name: "Ramesh Patel",
+                username: "ramesh_farmer",
+                password: "agri123",
+                role: "Verified Account Holder",
+                location: "Lasalgaon, Nashik",
+                phone_email: "9876543210"
+            }
+        ];
+
+        // Ensure users repository is initialized in localStorage
+        function getStoredUsers() {
+            try {
+                const stored = localStorage.getItem('agro_registered_users');
+                if (!stored) {
+                    localStorage.setItem('agro_registered_users', JSON.stringify(DEFAULT_USERS));
+                    return DEFAULT_USERS;
+                }
+                return JSON.parse(stored);
+            } catch (e) {
+                return DEFAULT_USERS;
+            }
+        }
+
+        function saveStoredUsers(users) {
+            localStorage.setItem('agro_registered_users', JSON.stringify(users));
+        }
+
+        // Set active logged-in user
+        function setActiveSession(user) {
+            localStorage.setItem('agro_currentUser', JSON.stringify(user));
+            // Also store individual quick keys for backwards compatibility with any template hooks
+            localStorage.setItem('agro_userName', user.name);
+            localStorage.setItem('agro_userHandle', user.username);
+            localStorage.setItem('agro_userRole', user.role || 'Farmer / FPO');
+            // Clean legacy un-scoped purchase key so new users start clean
+            try { localStorage.removeItem('agro_my_purchases'); } catch (e) {}
+        }
+
+        // Toast alert helper
+        function toast(message, type = 'info') {
+            const el = document.getElementById('authToast');
+            el.className = `auth-toast show ${type}`;
+            el.innerHTML = (type === 'success' ? '✅ ' : type === 'error' ? '❌ ' : 'ℹ️ ') + message;
+            clearTimeout(window._toastTimeout);
+            window._toastTimeout = setTimeout(() => {
+                el.className = 'auth-toast';
+            }, 3500);
+        }
+
+        // Tab Switching
+        function switchAuthTab(tab) {
+            const isSignIn = tab === 'signin';
+            document.getElementById('signInForm').style.display = isSignIn ? 'block' : 'none';
+            document.getElementById('registerForm').style.display = isSignIn ? 'none' : 'block';
+
+            document.getElementById('tabSignInBtn').className = `auth-tab-btn ${isSignIn ? 'active' : ''}`;
+            document.getElementById('tabRegisterBtn').className = `auth-tab-btn ${!isSignIn ? 'active' : ''}`;
+            document.getElementById('tabSignInBtn').setAttribute('aria-selected', isSignIn);
+            document.getElementById('tabRegisterBtn').setAttribute('aria-selected', !isSignIn);
+        }
+
+        // Live preview synchronization
+        let selectedRoleText = 'Farmer / FPO';
+        let usernameEditedManually = false;
+
+        function getInitials(name) {
+            if (!name) return 'U';
+            const parts = name.trim().split(/\s+/);
+            if (parts.length >= 2) {
+                return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+            }
+            return name.slice(0, 2).toUpperCase();
+        }
+
+        function updateLivePreview(name, handle, role) {
+            const cleanName = name.trim() || 'Ramesh Patel';
+            const cleanHandle = handle.trim() || 'ramesh_farmer';
+            const cleanRole = role || selectedRoleText;
+
+            document.getElementById('liveName').textContent = cleanName;
+            document.getElementById('liveHandle').textContent = `@${cleanHandle.replace(/^@/, '')}`;
+            document.getElementById('liveRole').textContent = cleanRole;
+            document.getElementById('liveAvatar').textContent = getInitials(cleanName);
+        }
+
+        // Auto-generate personal username from Full Name as user types
+        function onNameInput(name) {
+            const currentName = name.trim();
+            if (!usernameEditedManually && currentName) {
+                // Generate clean handle: e.g. "Ramesh Patel" -> "ramesh_patel"
+                const autoHandle = currentName
+                    .toLowerCase()
+                    .replace(/[^a-z0-9\s]/g, '')
+                    .replace(/\s+/g, '_')
+                    .slice(0, 20);
+
+                const usernameInput = document.getElementById('regUsername');
+                usernameInput.value = autoHandle;
+                checkUsernameAvailability(autoHandle);
+            }
+            updateLivePreview(
+                currentName || 'Ramesh Patel',
+                document.getElementById('regUsername').value || 'ramesh_farmer',
+                selectedRoleText
+            );
+        }
+
+        function onUsernameInput(handle) {
+            usernameEditedManually = true;
+            const cleanHandle = handle.toLowerCase().replace(/[^a-z0-9_]/g, '');
+            document.getElementById('regUsername').value = cleanHandle;
+            checkUsernameAvailability(cleanHandle);
+            updateLivePreview(
+                document.getElementById('regFullName').value || 'Farmer',
+                cleanHandle || 'username',
+                selectedRoleText
+            );
+        }
+
+        function checkUsernameAvailability(username) {
+            const statusEl = document.getElementById('usernameStatus');
+            const clean = username.trim().toLowerCase().replace(/^@/, '');
+
+            if (clean.length < 3) {
+                statusEl.className = 'username-status taken';
+                statusEl.innerHTML = '⚠️ Min 3 chars';
+                return;
+            }
+
+            // Check against stored users
+            const users = getStoredUsers();
+            const exists = users.some(u => u.username.toLowerCase() === clean);
+
+            if (exists) {
+                statusEl.className = 'username-status taken';
+                statusEl.innerHTML = '❌ Taken';
+            } else {
+                statusEl.className = 'username-status available';
+                statusEl.innerHTML = '✓ Available';
+            }
+        }
+
+        function selectRole(element, role) {
+            document.querySelectorAll('.role-pill').forEach(p => p.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedRoleText = role;
+            updateLivePreview(
+                document.getElementById('regFullName').value || 'Farmer',
+                document.getElementById('regUsername').value || 'username',
+                role
+            );
+        }
+
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                btn.textContent = '👁️';
+            }
+        }
+
+        function updatePasswordStrength(password) {
+            const fill = document.getElementById('strengthFill');
+            let score = 0;
+            if (password.length >= 6) score += 30;
+            if (password.length >= 8) score += 20;
+            if (/[0-9]/.test(password)) score += 25;
+            if (/[^A-Za-z0-9]/.test(password)) score += 25;
+
+            fill.style.width = `${Math.min(score, 100)}%`;
+            if (score <= 30) {
+                fill.style.backgroundColor = '#d93025';
+            } else if (score <= 70) {
+                fill.style.backgroundColor = '#e2a325';
+            } else {
+                fill.style.backgroundColor = '#2b7428';
+            }
+        }
+
+        // 1-Click Guest Visitor Exploration
+        function continueAsGuest() {
+            const guestUser = {
+                name: "Guest Visitor",
+                username: "visitor_guest",
+                role: "Guest Explorer",
+                location: "National Mandis",
+                isGuest: true
+            };
+            setActiveSession(guestUser);
+            toast("Welcome! Opening Agro-Sphere in Visitor Demo Mode...", "info");
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 500);
+        }
+
+        // 1-Click Quick Demo Login
+        function quickLogin(username, password, name, role) {
+            document.getElementById('loginId').value = username;
+            document.getElementById('loginPassword').value = password;
+            toast(`Signing in as ${name} (${role})...`, 'success');
+
+            setTimeout(() => {
+                const userObj = {
+                    name: name,
+                    username: username,
+                    role: role,
+                    location: "Lasalgaon, Nashik"
+                };
+                setActiveSession(userObj);
+                window.location.href = 'index.html';
+            }, 800);
+        }
+
+        // Handle Sign In Submit
+        async function handleSignInSubmit(e) {
+            e.preventDefault();
+            const loginId = document.getElementById('loginId').value.trim().toLowerCase().replace(/^@/, '');
+            const password = document.getElementById('loginPassword').value;
+
+            if (!loginId || !password) {
+                toast('Please enter your username and password.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('signInSubmitBtn');
+            btn.innerHTML = '<span>Verifying credentials...</span> ⏳';
+            btn.disabled = true;
+
+            // Try backend API first, with fallback to localStorage
+            let authenticatedUser = null;
+
+            try {
+                const resp = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: loginId, password: password })
+                });
+
+                if (resp.ok) {
+                    const data = await resp.json();
+                    authenticatedUser = data.user;
+                }
+            } catch (err) {
+                console.log('Backend offline, using local offline storage verification.');
+            }
+
+            // Fallback to localStorage check
+            if (!authenticatedUser) {
+                const users = getStoredUsers();
+                const matched = users.find(u =>
+                    (u.username.toLowerCase() === loginId || (u.phone_email && u.phone_email.toLowerCase() === loginId)) &&
+                    u.password === password
+                );
+                if (matched) {
+                    authenticatedUser = {
+                        name: matched.name,
+                        username: matched.username,
+                        role: matched.role || 'Farmer / FPO',
+                        location: matched.location || 'Maharashtra'
+                    };
+                }
+            }
+
+            if (authenticatedUser) {
+                setActiveSession(authenticatedUser);
+                toast(`Welcome back, ${authenticatedUser.name}! Opening your dashboard...`, 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 800);
+            } else {
+                btn.innerHTML = '<span>Sign In to Dashboard</span> ➔';
+                btn.disabled = false;
+                toast('Invalid username or password. Please check your credentials.', 'error');
+            }
+        }
+
+        // Handle Registration Submit
+        async function handleRegisterSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('regFullName').value.trim();
+            let username = document.getElementById('regUsername').value.trim().toLowerCase().replace(/^@/, '');
+            const phoneEmail = document.getElementById('regPhone').value.trim();
+            const location = document.getElementById('regLocation').value.trim() || 'Maharashtra';
+            const password = document.getElementById('regPassword').value;
+
+            if (!name || name.length < 2) {
+                toast('Please enter your full name.', 'error');
+                document.getElementById('regFullName').focus();
+                return;
+            }
+
+            if (!username || username.length < 3) {
+                toast('Please choose a personal username with at least 3 characters.', 'error');
+                document.getElementById('regUsername').focus();
+                return;
+            }
+
+            if (!phoneEmail) {
+                toast('Please provide a mobile number or email address.', 'error');
+                document.getElementById('regPhone').focus();
+                return;
+            }
+
+            if (!password || password.length < 5) {
+                toast('Password must be at least 5 characters long.', 'error');
+                document.getElementById('regPassword').focus();
+                return;
+            }
+
+            const btn = document.getElementById('registerSubmitBtn');
+            btn.innerHTML = '<span>Creating your account...</span> ⏳';
+            btn.disabled = true;
+
+            const newUser = {
+                name: name,
+                username: username,
+                role: selectedRoleText,
+                location: location,
+                phone_email: phoneEmail,
+                password: password
+            };
+
+            // 1. Try FastAPI backend if available
+            let createdUser = null;
+            try {
+                const resp = await fetch(`${API_BASE}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newUser)
+                });
+                if (resp.ok) {
+                    const data = await resp.json();
+                    createdUser = data.user;
+                } else {
+                    const err = await resp.json();
+                    toast(err.detail || 'Could not register user.', 'error');
+                    btn.innerHTML = '<span>Create Account & Open Dashboard</span> ➔';
+                    btn.disabled = false;
+                    return;
+                }
+            } catch (err) {
+                console.log('Backend offline, proceeding with local browser database.');
+            }
+
+            // 2. Save locally in localStorage
+            const currentUsers = getStoredUsers();
+            if (currentUsers.some(u => u.username.toLowerCase() === username)) {
+                toast(`Username '@${username}' is already taken. Please pick another one.`, 'error');
+                btn.innerHTML = '<span>Create Account & Open Dashboard</span> ➔';
+                btn.disabled = false;
+                return;
+            }
+
+            currentUsers.push(newUser);
+            saveStoredUsers(currentUsers);
+
+            // 3. Set as current active user and redirect to dashboard
+            const sessionData = createdUser || {
+                name: name,
+                username: username,
+                role: selectedRoleText,
+                location: location
+            };
+            setActiveSession(sessionData);
+
+            toast(`Account created successfully for ${name}! Welcome to Agro-Sphere 🌾`, 'success');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 900);
+        }
+
+        // Initialize preview on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateLivePreview('Ramesh Patel', 'ramesh_farmer', 'Farmer / FPO');
+            if (new URLSearchParams(window.location.search).get('tab') === 'register') {
+                switchAuthTab('register');
+            }
+        });
+    </script>
+
+</body>
+
+</html>
