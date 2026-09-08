@@ -117,8 +117,8 @@ def init_db():
             ('Potato', 'vegetables', 'Grade B', 'Nagpur', 70, 1920, 'https://plus.unsplash.com/premium_photo-1724849333632-d88aa5a73d9c?q=80&w=687&auto=format&fit=crop', '🥔', 'Bharat Foods', 0, '40mm - 50mm Medium Table', 'Standard Table Quality', '50kg Gunny Bags', 'Lab Tested', 'Packed'),
 
             # POMEGRANATE
-            ('Pomegranate', 'fruits', 'Grade A', 'Lasalgaon', 55, 7200, 'https://images.unsplash.com/photo-1541344999736-83eca872f240?q=80&w=1000&auto=format&fit=crop', '🍎', 'FreshFruit Exporters', 0, '250g - 350g (Bhagwa Ruby)', '98% Export Grade · Glossy Skin', '10kg Corrugated Boxes', 'Global GAP Certified', 'Harvested Today'),
-            ('Pomegranate', 'fruits', 'Grade B', 'Pune', 40, 5800, 'https://images.unsplash.com/photo-1541344999736-83eca872f240?q=80&w=1000&auto=format&fit=crop', '🍎', 'JuiceMakers Direct', 1, '180g - 240g Standard', '90% Sweet Aril Juice Grade', '15kg Crates', 'Standard Mandi Pass', 'Harvested 2 days ago'),
+            ('Pomegranate', 'fruits', 'Grade A', 'Lasalgaon', 55, 7200, 'assets/pomegranate.jpg', '🍎', 'FreshFruit Exporters', 0, '250g - 350g (Bhagwa Ruby)', '98% Export Grade · Glossy Skin', '10kg Corrugated Boxes', 'Global GAP Certified', 'Harvested Today'),
+            ('Pomegranate', 'fruits', 'Grade B', 'Pune', 40, 5800, 'assets/pomegranate.jpg', '🍎', 'JuiceMakers Direct', 1, '180g - 240g Standard', '90% Sweet Aril Juice Grade', '15kg Crates', 'Standard Mandi Pass', 'Harvested 2 days ago'),
 
             # MANGO
             ('Mango', 'fruits', 'Grade A', 'Ratnagiri', 40, 12500, 'https://plus.unsplash.com/premium_photo-1724255863470-4591b856cc10?q=80&w=687&auto=format&fit=crop', '🥭', 'Gourmet Fruit Hub', 1, '250g+ (Ratnagiri Alphonso GI)', 'Naturally Ripened · Rich Aroma', 'Wooden Gift Crates (12 Dozen)', 'Organic Certified', 'Tree-Ripened 2 Days Ago'),
