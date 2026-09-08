@@ -5506,19 +5506,44 @@ window.dismissVisitorBanner = function() {
 };
 
 window.switchUserPersona = function() {
-    toast("Single account holder mode active: Only Ramesh Patel has access.");
+    window.location.href = "login.html";
 };
 
 function initUserSession() {
-    // Single Account Holder model: Only one verified account holder has access
-    const user = SINGLE_ACCOUNT_HOLDER;
-    localStorage.setItem("agro_currentUser", JSON.stringify(user));
+    let user = null;
+    try {
+        const stored = localStorage.getItem("agro_currentUser");
+        if (stored) {
+            user = JSON.parse(stored);
+        }
+    } catch (e) {
+        console.error("Error reading agro_currentUser from localStorage", e);
+    }
 
-    const cleanName = user.name;
-    const cleanHandle = user.username;
+    // Check if user object has a valid name, else check fallback keys, else default account
+    if (!user || (!user.name && !user.username)) {
+        const fallbackName = localStorage.getItem("agro_userName");
+        const fallbackHandle = localStorage.getItem("agro_userHandle");
+        const fallbackRole = localStorage.getItem("agro_userRole");
+        if (fallbackName) {
+            user = {
+                name: fallbackName,
+                username: fallbackHandle || fallbackName.toLowerCase().replace(/\s+/g, '_'),
+                role: fallbackRole || "Verified Account Holder",
+                location: "Lasalgaon, Nashik",
+                isGuest: false
+            };
+        } else {
+            user = SINGLE_ACCOUNT_HOLDER;
+        }
+        localStorage.setItem("agro_currentUser", JSON.stringify(user));
+    }
+
+    const cleanName = (user.name || "User").trim();
+    const cleanHandle = (user.username || "user").trim().replace(/^@/, '');
     const initials = getInitials(cleanName);
-    const roleText = user.role;
-    const locationText = user.location;
+    const roleText = user.role || "Verified Account Holder";
+    const locationText = user.location || "Lasalgaon, Nashik";
 
     // 1. Update Header Profile elements
     const headerAvatar = document.getElementById("headerAvatar");
