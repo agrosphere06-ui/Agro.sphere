@@ -124,6 +124,10 @@ def init_db():
             ('Mango', 'fruits', 'Grade A', 'Ratnagiri', 40, 12500, 'https://plus.unsplash.com/premium_photo-1724255863470-4591b856cc10?q=80&w=687&auto=format&fit=crop', '🥭', 'Gourmet Fruit Hub', 1, '250g+ (Ratnagiri Alphonso GI)', 'Naturally Ripened · Rich Aroma', 'Wooden Gift Crates (12 Dozen)', 'Organic Certified', 'Tree-Ripened 2 Days Ago'),
             ('Mango', 'fruits', 'Grade B', 'Nagpur', 35, 9200, 'https://plus.unsplash.com/premium_photo-1724255863470-4591b856cc10?q=80&w=687&auto=format&fit=crop', '🥭', 'MahaFruit Wholesale', 0, '180g - 220g Table Grade', '88% Ripe Commercial Grade', 'Standard Cardboard Crates', 'Safe Tested', 'Harvested 3 days ago'),
 
+            # GUAVA
+            ('Guava', 'fruits', 'Grade A', 'Pune', 35, 3100, 'assets/guava.jpg', '🍐', 'FarmDirect Fruits', 0, '300g Jumbo White (VNR Bihi)', 'Crisp, Sweet & Seedless Pulp', 'Foam Net Wrapped Crates', 'GAP Certified', 'Harvested This Morning'),
+            ('Guava', 'fruits', 'Grade B', 'Lasalgaon', 50, 2400, 'assets/guava.jpg', '🍐', 'FreshJuice Aggregators', 0, '180g - 240g Standard Green (L-49 Sardar)', '88% Freshness · Processing Grade', 'Corrugated Mesh Crates', 'MRL Compliant', 'Harvested Yesterday'),
+
             # WHEAT
             ('Wheat', 'grains', 'Grade A', 'Pune', 120, 2640, 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=1989&auto=format&fit=crop', '🌾', 'AgroMart', 0, 'Sharbati Gold Grain', 'Moisture < 11% Clean Dry', '50kg HDPE Bags', 'FSSAI Grade A', 'Cleaned & Machine Sorted'),
             ('Wheat', 'grains', 'Grade B', 'Nagpur', 75, 2320, 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=1989&auto=format&fit=crop', '🌾', 'Milling Flour Mills', 0, 'Lokwan Standard Grain', 'Moisture 12.2% Clean', '50kg Jute Sacks', 'APMC Standard', 'Farm Stored'),

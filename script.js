@@ -1058,8 +1058,9 @@ const defaultCropImages = {
     "seb": "https://images.unsplash.com/photo-1669295418566-f9833417f330?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     "orange": "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?q=80&w=1000&auto=format&fit=crop",
     "santra": "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?q=80&w=1000&auto=format&fit=crop",
-    "guava": "https://images.unsplash.com/photo-1536511135899-73d82a17406a?q=80&w=1000&auto=format&fit=crop",
-    "amrood": "https://images.unsplash.com/photo-1536511135899-73d82a17406a?q=80&w=1000&auto=format&fit=crop",
+    "guava": "assets/guava.jpg",
+    "amrood": "assets/guava.jpg",
+    "peru": "assets/guava.jpg",
     "soybean": "https://images.unsplash.com/photo-1639843606783-b2f9c50a7468?q=80&w=1073&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     "wheat": "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=1989&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     "potato": "https://plus.unsplash.com/premium_photo-1724849333632-d88aa5a73d9c?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -1410,7 +1411,7 @@ const state = {
             location: "Pune",
             qty: 35,
             price: 3100,
-            img: "https://images.unsplash.com/photo-1536511135899-73d82a17406a?q=80&w=1000&auto=format&fit=crop",
+            img: "assets/guava.jpg",
             e: "🍐",
             buyer: "FarmDirect Fruits",
             isUrgent: false,
@@ -1419,6 +1420,24 @@ const state = {
             packagingSpec: "Foam Net Wrapped Crates",
             pesticideSpec: "GAP Certified",
             harvestSpec: "Harvested This Morning"
+        },
+        {
+            id: 24,
+            crop: "Guava",
+            category: "fruits",
+            grade: "Grade B",
+            location: "Lasalgaon",
+            qty: 50,
+            price: 2400,
+            img: "assets/guava.jpg",
+            e: "🍐",
+            buyer: "FreshJuice Aggregators",
+            isUrgent: false,
+            sizeSpec: "180g - 240g Standard Green (L-49 Sardar)",
+            freshnessSpec: "88% Freshness · Processing Grade",
+            packagingSpec: "Corrugated Mesh Crates",
+            pesticideSpec: "MRL Compliant",
+            harvestSpec: "Harvested Yesterday"
         },
 
         // --- GRAINS & PULSES ---
@@ -4031,6 +4050,7 @@ $("#listingForm").onsubmit = event => {
     else if (category === "grains") emoji = "🌾";
     if (cropKey.includes("lemon") || cropKey.includes("nimbu")) emoji = "🍋";
     else if (cropKey.includes("pomegranate") || cropKey.includes("anar")) emoji = "🍎";
+    else if (cropKey.includes("guava") || cropKey.includes("amrood") || cropKey.includes("peru")) emoji = "🍐";
     else if (cropKey.includes("banana") || cropKey.includes("kela")) emoji = "🍌";
     else if (cropKey.includes("mango") || cropKey.includes("aam")) emoji = "🥭";
     else if (cropKey.includes("grape") || cropKey.includes("angoor")) emoji = "🍇";
